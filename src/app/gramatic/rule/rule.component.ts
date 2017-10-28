@@ -13,7 +13,7 @@ export class RuleComponent {
 
   constructor(){
     let cadena = "BC"
-    console.log(cadena.indexOf("C"));
+    console.log(cadena.indexOf("C") + 1);
     console.log(cadena.length)
   }
 
@@ -76,15 +76,16 @@ export class RuleComponent {
         regla.firstOne.push(regla.der[0]);
     }
     for(let regla of this.reglas){
-      for(let inex of this.reglas){
-        if(new RegExp(regla.izq).test(inex.izq))
-          regla.firstOnes = regla.firstOnes.concat(inex.firstOne);
+      let filter = this.reglas.filter(item => {
+        return new RegExp(regla.izq).test(item.izq)
+      });
+      for(let inex of filter){
+        regla.firstOnes = regla.firstOnes.concat(inex.firstOne);
       }
     }
     while(this.checkLeftFirstOnes()){
       for(let regla of this.reglas){
         if(/[A-Z]/.test(regla.der[0])){
-          console.log("Si pasa para aca")
           this.firstNested(regla, regla.der[0], regla.der, 0);
         }
       }
@@ -97,21 +98,18 @@ export class RuleComponent {
             regla.lastOnes = regla.lastOnes.concat(inex.der[inex.der.indexOf(regla.izq) + 1])
           }else{
             for(let find of this.reglas){
-              if(new RegExp(find.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1])){
-                if(!find.searchEmpty()){
-                  regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
-                  break;
-                }
-              }
+              let find = this.reglas.find(item => {
+                return new RegExp(item.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1]);
+              });
+              regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
             }
           }
-        }else if(inex.der.indexOf(regla.izq)+1 == inex.der.length){
-          for(let find of this.reglas){
-            if(new RegExp(find.izq).test(inex.izq)){
-              regla.lastOnes = regla.lastOnes.concat(find.lastOnes);
-              break;
-            }
-          }
+        }else if(inex.der.indexOf(regla.izq) + 1 == inex.der.length){
+          console.log("CONCHALE ENTRA ACA")
+          let find = this.reglas.find(item => {
+            return new RegExp(item.izq).test(inex.izq);
+          });
+          regla.lastOnes = regla.lastOnes.concat(find.lastOnes);
         }
       }
     }
@@ -119,20 +117,16 @@ export class RuleComponent {
       for(let inex of this.reglas){
         if(inex.der.indexOf(regla.izq) != -1){
           if(/[A-Z]/.test(inex.der[inex.der.indexOf(regla.izq) + 1])){
-            for(let find of this.reglas){
-              if(new RegExp(find.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1])){
-                if(find.searchEmpty()){
-                  regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
-                  regla.lastOnes.splice(regla.lastOnes.indexOf('?'),1);
-                  for(let find2 of this.reglas){
-                    if(new RegExp(find2.izq).test(inex.izq)){
-                      regla.lastOnes = regla.lastOnes.concat(find2.lastOnes);
-                      break;
-                    }
-                  }
-                }
-                break;
-              }
+            let find = this.reglas.find(item => {
+              return new RegExp(item.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1]);
+            });
+            if(find.searchEmpty()){
+              regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
+              regla.lastOnes.splice(regla.lastOnes.indexOf('?'),1);
+              let find2 = this.reglas.find(item => {
+                return new RegExp(item.izq).test(inex.izq);
+              });
+              regla.lastOnes = regla.lastOnes.concat(find2.lastOnes);
             }
           }
         }
