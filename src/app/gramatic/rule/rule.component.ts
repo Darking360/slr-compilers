@@ -3,8 +3,8 @@ import { Rule } from './rule';
 
 @Component({
   selector: 'app-rule',
-  templateUrl: 'gramatic.component.html'
+  templateUrl: 'rule.component.html'
 })
-export class GramaticComponent {
+export class RuleComponent {
   name = "Prueba iniciando SLR"
 }
