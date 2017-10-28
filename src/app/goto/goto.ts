@@ -37,7 +37,6 @@ export class State {
     console.log(`Estado ${copy} ${this.number}`);
     let recorrido = this.rule.getRigthSide().substr(0,this.clausurePosition) + '.' + this.rule.getRigthSide().substr(this.clausurePosition);
     console.log(`${this.rule.getLeftSide()} -> ${recorrido}`);
-    console.log(this.expansion)
     if(this.expansion.length > 0){
       console.log('------');
       this.expansion.forEach((exp) => {
@@ -63,7 +62,7 @@ export class State {
 
   moveRight = (rules: Rule[]) => {
     if(!this.clausureAtEnd()){
-      let newState = new State(this.rule, this.number+1, this.clausurePosition+1, false, this.expansion);
+      let newState = new State(this.rule, this.number+1, this.clausurePosition+1);
       newState.expand(newState.clausurePosition, rules)
       return newState;
     }
