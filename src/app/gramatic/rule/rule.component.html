@@ -1,1 +1,28 @@
-<h2>Render rule SLR</h2>
+<div class="form-group col-xs-12">
+  <label>Lado izquierdo</label>
+  <input type="text" [(ngModel)]="inputIzq">
+  <label> -----> </label>
+  <label>Lado derecho</label>
+  <input type="text" [(ngModel)]="inputDer">
+</div>
+<div class="col-xs-12 text-center">
+  <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>
+  <button type="button" class="btn btn-primary" (click)="findFirstAndLastOnes()">Crear regla</button>
+</div>
+<div class="col-xs-12">
+  <h2>Lado izquierdo: {{inputIzq}}</h2>
+  <h2>Lado derecho: {{inputDer}}</h2>
+</div>
+<div *ngIf="reglas.length > 0" class="col-xs-12">
+  <div *ngFor="let regla of reglas" class="col-xs-12">
+    <h3 class="col-xs-1">{{ regla.izq }}</h3>
+    <h3 class="col-xs-1"> => </h3>
+    <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
+    <h3 class="col-xs-1"> Primeros regla: </h3>
+    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOne.join(", ") }}</h3>
+    <h3 class="col-xs-1"> Primeros: </h3>
+    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-2">{{ regla.firstOnes.join(", ") }}</h3>
+    <h3 class="col-xs-1"> Siguientes: </h3>
+    <h3 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h3>
+  </div>
+</div>
