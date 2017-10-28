@@ -10,26 +10,17 @@ export class GotoComponent {
 
 @Input() rules: Rule[];
 
+  goToList: State[];
+
   constructor(){ 
+    this.goToList = [];
   }
 
   makeGoTo = () => {
     const newState = new State(this.rules[0]);
     newState.print();
-    let auxState = newState;
-    while(!auxState.clausureAtEnd()){
-      auxState = auxState.moveRight(this.rules);
-      auxState.print();
-      if(auxState.expansion.length > 0){
-        let expState = auxState.expansion[0];
-        console.log('------');
-        expState.print()
-        while(!expState.clausureAtEnd()){
-          expState = expState.moveRight(this.rules);
-          expState.print()
-        }
-      }
-    }
+    newState.expand(newState.clausurePosition,this.rules,this.goToList)
+    newState.moveRight(this.rules,this.goToList);
 
   }
 

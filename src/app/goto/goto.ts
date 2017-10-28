@@ -45,9 +45,14 @@ export class State {
       return new State(new Rule('S','ff')) // metodo para buscar que rule es segun el No Terminal detectado
   }
 */
-  expand (clausurePosition, rules) {
-    if(this.rule.getRigthSide().substr(clausurePosition,clausurePosition).match(/[A-Z]/g))
-      this.expansion = this.expansion.concat(new State(this.findRule(rules, this.rule.getRigthSide().substr(clausurePosition,1)))) // metodo para buscar que rule es segun el No Terminal detectado
+  expand (clausurePosition, rules, list) {
+    if(this.rule.getRigthSide().substr(clausurePosition,1).match(/[A-Z]/g)){
+      this.expansion = this.expansion.concat(new State(this.findRule(rules, this.rule.getRigthSide().substr(clausurePosition,1))))
+      console.log('------');
+      this.expansion[0].print()
+      this.expansion[0].moveRight(rules,list)
+    }
+
   }
 
   findRule(rules: Rule[], ruleToFind: string): Rule{
@@ -55,11 +60,13 @@ export class State {
     return rule;
   }
 
-  moveRight = (rules: Rule[]) => {
+  moveRight = (rules: Rule[], list: State[]) => {
     if(!this.clausureAtEnd()){
       let newState = new State(this.rule, this.number+1, this.clausurePosition+1);
-      newState.expand(newState.clausurePosition, rules)
-      return newState;
+      newState.print();
+      newState.expand(newState.clausurePosition, rules, list)
+      list.push(newState);
+      newState.moveRight(rules,list)
     }
     else
       console.log("Final de la regla")
