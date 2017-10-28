@@ -46,9 +46,15 @@ export class RuleComponent {
       if(new RegExp(character).test(regla.izq)){
         if(regla.searchEmpty()){
           rule.firstOne = rule.firstOne.concat(regla.firstOnes);
-          rule.firstOne.splice(rule.firstOne.indexOf('?'),1);
+          rule.firstOne = rule.firstOne.filter(item => {
+            return item !== '?';
+          });
           rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
-          rule.firstOnes.splice(rule.firstOnes.indexOf('?'),1);
+          if(index + 1 !== chain.length){
+            rule.firstOnes = rule.firstOnes.filter(item => {
+              return item !== '?';
+            });
+          }
           if(index <= chain.length)
             this.firstNested(rule,chain[index+1], chain, index+1);
           else
@@ -90,6 +96,9 @@ export class RuleComponent {
         }
       }
     }
+    for(let regla of this.reglas){
+      regla.makeUnique();
+    }
     //Going to find last ones from here
     for(let regla of this.reglas){
       for(let inex of this.reglas){
@@ -105,7 +114,6 @@ export class RuleComponent {
             }
           }
         }else if(inex.der.indexOf(regla.izq) + 1 == inex.der.length){
-          console.log("CONCHALE ENTRA ACA")
           let find = this.reglas.find(item => {
             return new RegExp(item.izq).test(inex.izq);
           });
@@ -122,7 +130,9 @@ export class RuleComponent {
             });
             if(find.searchEmpty()){
               regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
-              regla.lastOnes.splice(regla.lastOnes.indexOf('?'),1);
+              regla.lastOnes = regla.lastOnes.filter(item => {
+                return item !== '?';
+              });
               let find2 = this.reglas.find(item => {
                 return new RegExp(item.izq).test(inex.izq);
               });
