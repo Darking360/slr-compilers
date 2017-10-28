@@ -5,7 +5,9 @@ export class Rule {
   firstOnes: string[];
   lastOnes: string[];
 
-  constructor(){
+  constructor(izq = '', der = ''){
+    this.izq = izq;
+    this.der = der;
     this.firstOnes = [];
     this.lastOnes = [];
     this.firstOne = [];
@@ -27,4 +29,26 @@ export class Rule {
       return self.indexOf(item) == pos;
     });
   }
+
+  checkLeft(){
+    if(this.izq.match(/[a-z]/g))
+      console.log('Lado izquierdo de la regla ha de ser en MAYÚSCULA indicando un No terminal')
+  }
+
+  checkRight(rigthSide){
+    
+  }
+
+  getLeftSide(){
+    return this.izq;
+  }
+
+  getRigthSide(){
+    return this.der;
+  }
+
+  print(){
+    console.log(`REGLA: ${this.izq} -> ${this.der}`)
+  }
+
 }
