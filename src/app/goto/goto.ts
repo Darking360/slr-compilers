@@ -37,12 +37,7 @@ export class State {
     console.log(`Estado ${copy} ${this.number}`);
     let recorrido = this.rule.getRigthSide().substr(0,this.clausurePosition) + '.' + this.rule.getRigthSide().substr(this.clausurePosition);
     console.log(`${this.rule.getLeftSide()} -> ${recorrido}`);
-    if(this.expansion.length > 0){
-      console.log('------');
-      this.expansion.forEach((exp) => {
-        console.log(exp.print())
-      })
-    }
+    
   }
 
  /* expand = () => { //ver si es necesario ambos metodos con y sin params

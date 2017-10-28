@@ -20,6 +20,15 @@ export class GotoComponent {
     while(!auxState.clausureAtEnd()){
       auxState = auxState.moveRight(this.rules);
       auxState.print();
+      if(auxState.expansion.length > 0){
+        let expState = auxState.expansion[0];
+        console.log('------');
+        expState.print()
+        while(!expState.clausureAtEnd()){
+          expState = expState.moveRight(this.rules);
+          expState.print()
+        }
+      }
     }
 
   }
