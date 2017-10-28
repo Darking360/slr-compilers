@@ -20,6 +20,10 @@ export class State {
     return this.copy;
   }
 
+  clausureAtEnd = () => {
+    return this.rule.getRigthSide().length === this.clausurePosition
+  }
+
   getclausurePosition = () => {
     return this.clausurePosition;
   }
@@ -33,6 +37,7 @@ export class State {
     console.log(`Estado ${copy} ${this.number}`);
     let recorrido = this.rule.getRigthSide().substr(0,this.clausurePosition) + '.' + this.rule.getRigthSide().substr(this.clausurePosition);
     console.log(`${this.rule.getLeftSide()} -> ${recorrido}`);
+    console.log(this.expansion)
     if(this.expansion.length > 0){
       console.log('------');
       this.expansion.forEach((exp) => {
@@ -46,15 +51,24 @@ export class State {
       return new State(new Rule('S','ff')) // metodo para buscar que rule es segun el No Terminal detectado
   }
 */
-  expand (clausurePosition) {
-    const auxRule = new Rule('S','ff');
+  expand (clausurePosition, rules) {
     if(this.rule.getRigthSide().substr(clausurePosition,clausurePosition).match(/[A-Z]/g))
-      this.expansion = this.expansion.concat(new State(auxRule)) // metodo para buscar que rule es segun el No Terminal detectado
+      this.expansion = this.expansion.concat(new State(this.findRule(rules, this.rule.getRigthSide().substr(clausurePosition,1)))) // metodo para buscar que rule es segun el No Terminal detectado
   }
 
-  moveRight = () => {
-    this.expand(this.clausurePosition)
-    return new State(this.rule, this.number+1, this.clausurePosition+1, null)
+  findRule(rules: Rule[], ruleToFind: string): Rule{
+    let rule = rules.find(obj => obj.getLeftSide() === ruleToFind);
+    return rule;
+  }
+
+  moveRight = (rules: Rule[]) => {
+    if(!this.clausureAtEnd()){
+      let newState = new State(this.rule, this.number+1, this.clausurePosition+1, false, this.expansion);
+      newState.expand(newState.clausurePosition, rules)
+      return newState;
+    }
+    else
+      console.log("Final de la regla")
   }
 
 }

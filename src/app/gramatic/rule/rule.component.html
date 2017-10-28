@@ -25,4 +25,5 @@
     <h3 class="col-xs-1"> Siguientes: </h3>
     <h3 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h3>
   </div>
+    <app-goto [rules]="reglas"></app-goto>
 </div>

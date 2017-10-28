@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { State } from './goto';
 import {Rule} from '../gramatic/rule/rule';
 
@@ -8,19 +8,20 @@ import {Rule} from '../gramatic/rule/rule';
 })
 export class GotoComponent {
 
+@Input() rules: Rule[];
 
-  constructor(){
-    const newRule = new Rule('A', 'aaSaaa');
-    newRule.print();
-    const newState = new State(newRule);
-    newState.print();
-    const newState2 = newState.moveRight();
-    const newState3 = newState2.moveRight();
-    const newState4 = newState3.moveRight();
-    newState2.print();
-    newState3.print();
-    newState4.print();   
+  constructor(){ 
   }
 
-  
+  makeGoTo = () => {
+    const newState = new State(this.rules[0]);
+    newState.print();
+    let auxState = newState;
+    while(!auxState.clausureAtEnd()){
+      auxState = auxState.moveRight(this.rules);
+      auxState.print();
+    }
+
+  }
+
 }
