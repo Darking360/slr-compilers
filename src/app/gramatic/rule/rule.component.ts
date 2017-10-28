@@ -89,5 +89,57 @@ export class RuleComponent {
         }
       }
     }
+    //Going to find last ones from here
+    for(let regla of this.reglas){
+      for(let inex of this.reglas){
+        if(inex.der.indexOf(regla.izq) != -1 && inex.der.indexOf(regla.izq)+1 < inex.der.length){
+          if(!/[A-Z]/.test(inex.der[inex.der.indexOf(regla.izq) + 1])){
+            regla.lastOnes = regla.lastOnes.concat(inex.der[inex.der.indexOf(regla.izq) + 1])
+          }else{
+            for(let find of this.reglas){
+              if(new RegExp(find.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1])){
+                if(!find.searchEmpty()){
+                  regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
+                  break;
+                }
+              }
+            }
+          }
+        }else if(inex.der.indexOf(regla.izq)+1 == inex.der.length){
+          for(let find of this.reglas){
+            if(new RegExp(find.izq).test(inex.izq)){
+              regla.lastOnes = regla.lastOnes.concat(find.lastOnes);
+              break;
+            }
+          }
+        }
+      }
+    }
+    for(let regla of this.reglas){
+      for(let inex of this.reglas){
+        if(inex.der.indexOf(regla.izq) != -1){
+          if(/[A-Z]/.test(inex.der[inex.der.indexOf(regla.izq) + 1])){
+            for(let find of this.reglas){
+              if(new RegExp(find.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1])){
+                if(find.searchEmpty()){
+                  regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
+                  regla.lastOnes.splice(regla.lastOnes.indexOf('?'),1);
+                  for(let find2 of this.reglas){
+                    if(new RegExp(find2.izq).test(inex.izq)){
+                      regla.lastOnes = regla.lastOnes.concat(find2.lastOnes);
+                      break;
+                    }
+                  }
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    for(let regla of this.reglas){
+      regla.makeUnique();
+    }
   }
 }
