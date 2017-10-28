@@ -17,10 +17,14 @@ export class GotoComponent {
   }
 
   makeGoTo = () => {
-    const newState = new State(this.rules[0]);
-    newState.print();
-    newState.expand(newState.clausurePosition,this.rules,this.goToList)
-    newState.moveRight(this.rules,this.goToList);
+    let newState;
+    this.rules.forEach((rule) => {
+      newState = new State(rule);
+      newState.print();
+      newState.expand(newState.clausurePosition,this.rules,this.goToList)
+      newState.moveRight(this.rules,this.goToList);
+    })
+    console.log('Lista', this.goToList)
 
   }
 
