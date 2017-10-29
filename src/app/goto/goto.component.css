@@ -1,7 +1,19 @@
 .goto-rectangle {
 	border: 1px solid black;
-	height: 100px;
-	width: 60px;
-	padding: 1em;
+	height: 130px;
+	width: 100px;
+	padding: 10px;
 	display: inline-block;
+	margin: 1em;
+	white-space:pre-wrap;
+	text-align: left;
+}
+
+.rectangle-container {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.state-text {
+	margin-top: -5em;
 }

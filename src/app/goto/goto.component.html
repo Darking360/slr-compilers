@@ -1,8 +1,12 @@
 <div>
   <button type="button" class="btn btn-primary" (click)="makeGoTo()">Crear "Ir_a"</button>
 	<div *ngIf="goToList.length > 0" class="col-xs-12">
-		<section *ngFor="let state of goToList" class="goto-rectangle">
-				{{state.toString()}}
-  		</section>
+		<div *ngFor="let state of goToList" class="rectangle-container">
+				<section class="goto-rectangle">
+					<div class="state-text">
+						{{state.toString()}}
+					</div>
+				</section>
+  		</div>
   	</div>
 </div>
