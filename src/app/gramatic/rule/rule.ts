@@ -5,6 +5,7 @@ export class Rule {
   firstOnes: string[];
   lastOnes: string[];
   dotAdded:  boolean = false;
+  gramaticExpanded: boolean = false;
 
   constructor(){
     this.firstOnes = [];

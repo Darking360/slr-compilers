@@ -53,8 +53,11 @@ export class ClosingComponent {
           return item.izq === regla.der[regla.der.indexOf('.')+1];
         });
         for(let i of rules){
-          i.der = [i.der.slice(0,0) + '.' + i.der.slice(0)].toString();
-          closing.reglas.push(i);
+          let newR = new Rule();
+          newR.izq = i.izq;
+          newR.der = i.der;
+          newR.der = [newR.der.slice(0,0) + '.' + newR.der.slice(0)].toString();
+          closing.reglas.push(newR);
           this.generateRules(closing);
         }
       }
@@ -62,7 +65,7 @@ export class ClosingComponent {
     }
   }
 
-  makeClosings = () => {
+  startClosings = () => {
     let initial = this.reglas.find(item => {
       return item.der.indexOf('#') != -1;
     });
@@ -71,10 +74,40 @@ export class ClosingComponent {
     newR.izq = initial.izq;
     newR.der = [initial.der.slice(0,0) + '.' + initial.der.slice(0)].toString();
     newC.reglas.push(newR);
+    newC.index = 0;
     this.generateRules(newC);
     this.closings.push(newC);
-    console.log("SALE DE LA FUNCIÓN EXPANDIDA Y CON PUNTOS");
-    console.log(newC);
+    this.makeClosings();
+  }
+
+  makeClosings = () => {
+    for(let closing of this.closings){
+      for(let regla of closing.reglas){
+        let newC = new Closing();
+        if(regla.der.indexOf('.')+1 != -1 && typeof regla.der[regla.der.indexOf('.')+1] != undefined && regla.der.indexOf('.')+1 < regla.der.length && regla.der[regla.der.indexOf('.')+1] != '#' && regla.gramaticExpanded == false){
+          let rules = closing.reglas.filter(item => {
+            return regla !== item && item.der.indexOf('.') != -1 && item.der[item.der.indexOf('.')+1] == regla.der[regla.der.indexOf('.')+1];
+          });
+          for(let j of rules){
+            let newR = new Rule;
+            newR.izq = regla.izq;
+            newR.der = regla.der;
+            newR.der = [newR.der.slice(0,0) + '.' + newR.der.slice(0)].toString();
+            newC.reglas.push(j);
+          }
+          let newR = new Rule;
+          newR.izq = regla.izq;
+          newR.der = regla.der;
+          let position = newR.der.indexOf('.')+1;
+          newR.der = newR.der.replace(/\./g, "");
+          newR.der = newR.der.substr(0, position) + '.' + newR.der.substr(position);
+          newC.reglas.push(newR);
+          this.closings.push(newC);
+        }
+        regla.gramaticExpanded = true;
+      }
+      //this.closings.push(newC);
+    }
   }
 
 }
