@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { RuleComponent } from './gramatic/rule/rule.component';
+import { ClosingComponent } from './gramatic/closing/closing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RuleComponent
+    RuleComponent,
+    ClosingComponent
   ],
   imports: [
     BrowserModule,

@@ -7,23 +7,27 @@
 </div>
 <div class="col-xs-12 text-center">
   <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>
-  <button type="button" class="btn btn-primary" (click)="findFirstAndLastOnes()">Primeros + Siguientes</button>
   <button type="button" class="btn btn-primary" (click)="makeClosings()">IR_A</button>
 </div>
 <div class="col-xs-12">
   <h2>Lado izquierdo: {{inputIzq}}</h2>
   <h2>Lado derecho: {{inputDer}}</h2>
 </div>
+<h2>Reglas de la gramatica</h2>
 <div *ngIf="reglas.length > 0" class="col-xs-12">
   <div *ngFor="let regla of reglas" class="col-xs-12">
     <h3 class="col-xs-1">{{ regla.izq }}</h3>
     <h3 class="col-xs-1"> => </h3>
     <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
-    <h3 class="col-xs-1"> Primeros regla: </h3>
-    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOne.join(", ") }}</h3>
-    <h3 class="col-xs-1"> Primeros: </h3>
-    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-2">{{ regla.firstOnes.join(", ") }}</h3>
-    <h3 class="col-xs-1"> Siguientes: </h3>
-    <h3 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h3>
+  </div>
+</div>
+<h2>Expansión de IR_A</h2>
+<div *ngIf="closings.length > 0" class="col-xs-12">
+  <div *ngFor="let closing of closings" class="col-xs-12">
+    <div *ngFor="let regla of closing.reglas" class="col-xs-12">
+      <h3 class="col-xs-1">{{ regla.izq }}</h3>
+      <h3 class="col-xs-1"> => </h3>
+      <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
+    </div>
   </div>
 </div>

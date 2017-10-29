@@ -4,6 +4,7 @@ export class Rule {
   firstOne: string[];
   firstOnes: string[];
   lastOnes: string[];
+  dotAdded:  boolean = false;
 
   constructor(){
     this.firstOnes = [];
