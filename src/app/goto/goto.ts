@@ -40,23 +40,24 @@ export class State {
     
   }
 
- /* expand = () => { //ver si es necesario ambos metodos con y sin params
-    if(this.rule.getRigthSide().substr(this.clausurePosition+1,this.clausurePosition+1).match(/[A-Z]/g))
-      return new State(new Rule('S','ff')) // metodo para buscar que rule es segun el No Terminal detectado
-  }
-*/
   expand (clausurePosition, rules, list) {
     if(this.rule.getRigthSide().substr(clausurePosition,1).match(/[A-Z]/g)){
-      this.expansion = this.expansion.concat(new State(this.findRule(rules, this.rule.getRigthSide().substr(clausurePosition,1))))
+      const toExpand = this.findRule(rules, this.rule.getRigthSide().substr(clausurePosition,1));
+      toExpand.forEach((obj)=>{
+        this.expansion = this.expansion.concat(new State(obj))
+      })
       console.log('------');
-      this.expansion[0].print()
-      this.expansion[0].moveRight(rules,list)
+      this.expansion.forEach((expansion)=>{
+        expansion.print();
+        expansion.expand(expansion.clausurePosition, rules, list)
+        expansion.moveRight(rules, list);
+      })
     }
 
   }
 
-  findRule(rules: Rule[], ruleToFind: string): Rule{
-    let rule = rules.find(obj => obj.getLeftSide() === ruleToFind);
+  findRule(rules: Rule[], ruleToFind: string): Rule[]{
+    let rule = [].concat(rules.filter(obj => obj.getLeftSide() === ruleToFind));
     return rule;
   }
 
