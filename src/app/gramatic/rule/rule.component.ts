@@ -11,12 +11,6 @@ export class RuleComponent {
   inputIzq: string = "";
   inputDer: string = "";
 
-  constructor(){
-    let cadena = "BC"
-    console.log(cadena.indexOf("C") + 1);
-    console.log(cadena.length)
-  }
-
   canAdd = () => {
     let n = new Rule();
     n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
@@ -76,6 +70,37 @@ export class RuleComponent {
     return false;
   }
 
+  recursiveNextOnes = (rule: string) => {
+    let nextOnes = [];
+    let find = this.reglas.filter(item => {
+      return item.der.indexOf(rule) != -1 ;
+    });
+    for(let busq of find){
+      if(typeof busq.der[busq.der.indexOf(rule)+1] != 'undefined' && new RegExp('[A-Z]').test(busq.der[busq.der.indexOf(rule)+1])){
+        if(busq.searchEmpty()){
+          let hall = this.reglas.find(item => {
+            return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
+          });
+          nextOnes = nextOnes.concat(hall.firstOnes);
+          nextOnes = nextOnes.filter(item => {
+            return item !== '?';
+          });
+           nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
+        }else{
+          let hall = this.reglas.find(item => {
+            return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
+          });
+          nextOnes = nextOnes.concat(hall.firstOnes);
+        }
+      }else if(typeof busq.der[busq.der.indexOf(rule)+1] != 'undefined' && !new RegExp('[A-Z]').test(busq.der[busq.der.indexOf(rule)+1])){
+        nextOnes.push(busq.der[busq.der.indexOf(rule)+1]);
+      }else if(busq.der.indexOf(rule) != -1 && (busq.der.indexOf(rule) + 1) == busq.der.length && busq.der[busq.der.indexOf(rule)] != busq.izq){
+        nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
+      }
+    }
+    return nextOnes;
+  }
+
   findFirstAndLastOnes = () => {
     for(let regla of this.reglas){
       if(!/[A-Z]/.test(regla.der[0]) && typeof regla.der[0] != 'undefined' && regla.der[0] != null)
@@ -101,46 +126,10 @@ export class RuleComponent {
     }
     //Going to find last ones from here
     for(let regla of this.reglas){
-      for(let inex of this.reglas){
-        if(inex.der.indexOf(regla.izq) != -1 && inex.der.indexOf(regla.izq)+1 < inex.der.length){
-          if(!/[A-Z]/.test(inex.der[inex.der.indexOf(regla.izq) + 1])){
-            regla.lastOnes = regla.lastOnes.concat(inex.der[inex.der.indexOf(regla.izq) + 1])
-          }else{
-            for(let find of this.reglas){
-              let find = this.reglas.find(item => {
-                return new RegExp(item.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1]);
-              });
-              regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
-            }
-          }
-        }else if(inex.der.indexOf(regla.izq) + 1 == inex.der.length){
-          let find = this.reglas.find(item => {
-            return new RegExp(item.izq).test(inex.izq);
-          });
-          regla.lastOnes = regla.lastOnes.concat(find.lastOnes);
-        }
-      }
-    }
-    for(let regla of this.reglas){
-      for(let inex of this.reglas){
-        if(inex.der.indexOf(regla.izq) != -1){
-          if(/[A-Z]/.test(inex.der[inex.der.indexOf(regla.izq) + 1])){
-            let find = this.reglas.find(item => {
-              return new RegExp(item.izq).test(inex.der[inex.der.indexOf(regla.izq) + 1]);
-            });
-            if(find.searchEmpty()){
-              regla.lastOnes = regla.lastOnes.concat(find.firstOnes);
-              regla.lastOnes = regla.lastOnes.filter(item => {
-                return item !== '?';
-              });
-              let find2 = this.reglas.find(item => {
-                return new RegExp(item.izq).test(inex.izq);
-              });
-              regla.lastOnes = regla.lastOnes.concat(find2.lastOnes);
-            }
-          }
-        }
-      }
+      regla.lastOnes = regla.lastOnes.concat(this.recursiveNextOnes(regla.izq));
+      regla.lastOnes = regla.lastOnes.filter(item => {
+        return item.indexOf('?') == -1;
+      });
     }
     for(let regla of this.reglas){
       regla.makeUnique();
