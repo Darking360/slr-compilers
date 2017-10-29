@@ -81,11 +81,17 @@ export class State {
       //newState.print(rules,list);
       //newState.expand(newState.clausurePosition, rules, list)
       newState.checkExpand(rules);
-      list.push(newState);
-      newState.expansion.forEach((obj)=>{
-        obj.moveRight(rules,list)
-      })
-      newState.moveRight(rules,list);
+      if(!newState.checkIsCopy(list)){
+        list.push(newState);
+        newState.expansion.forEach((obj)=>{
+          obj.moveRight(rules,list)
+        })
+        newState.moveRight(rules,list);
+      }
+      else{
+        list.push(newState);
+      }
+
     }
     else
       console.log("Final de la regla")
@@ -97,6 +103,13 @@ export class State {
       aux = aux+"\n"+exp.toString();
     })
     return aux;
+  }
+
+  checkIsCopy = (list: State[]) => {
+    const isCopy = list.find(obj => JSON.stringify(obj) === JSON.stringify(this))
+      if(isCopy)
+        this.copy = true;
+    return isCopy;
   }
 
 }

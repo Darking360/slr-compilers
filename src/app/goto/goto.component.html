@@ -2,9 +2,9 @@
   <button type="button" class="btn btn-primary" (click)="makeGoTo()">Crear "Ir_a"</button>
 	<div *ngIf="goToList.length > 0" class="col-xs-12">
 		<div *ngFor="let state of goToList" class="rectangle-container">
-				<section class="goto-rectangle">
+				<section [ngClass]="(state.isCopy())?'goto-rectangle copy-state':'goto-rectangle'">
 					<div class="state-text">
-						{{state.toString()}}
+						{{state.toString().trim()}}
 					</div>
 				</section>
   		</div>

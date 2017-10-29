@@ -31,12 +31,8 @@ export class GotoComponent {
       newState.moveRight(this.rules,this.goToList);
       //this.goToList.push(newState)
     //})
-    //console.log('Lista', this.goToList)
-    this.goToList.forEach((state)=>{
-      state.toString()
-      console.log('----')
-    })
-
+   console.log('Lista', this.goToList)
+   
   }
 
 }

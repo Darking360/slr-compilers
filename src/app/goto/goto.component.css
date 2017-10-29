@@ -17,3 +17,7 @@
 .state-text {
 	margin-top: -5em;
 }
+
+.copy-state {
+	border: 1px solid blue;
+}
