@@ -77,10 +77,10 @@ export class RuleComponent {
     });
     for(let busq of find){
       if(typeof busq.der[busq.der.indexOf(rule)+1] != 'undefined' && new RegExp('[A-Z]').test(busq.der[busq.der.indexOf(rule)+1])){
-        if(busq.searchEmpty()){
-          let hall = this.reglas.find(item => {
-            return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
-          });
+        let hall = this.reglas.find(item => {
+          return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
+        });
+        if(hall.searchEmpty()){
           nextOnes = nextOnes.concat(hall.firstOnes);
           nextOnes = nextOnes.filter(item => {
             return item !== '?';
