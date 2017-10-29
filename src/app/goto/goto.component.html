@@ -1,5 +1,8 @@
 <div>
-Test html
   <button type="button" class="btn btn-primary" (click)="makeGoTo()">Crear "Ir_a"</button>
-
+	<div *ngIf="goToList.length > 0" class="col-xs-12">
+		<section *ngFor="let state of goToList" class="goto-rectangle">
+				{{state.toString()}}
+  		</section>
+  	</div>
 </div>

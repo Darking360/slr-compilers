@@ -1,0 +1,7 @@
+.goto-rectangle {
+	border: 1px solid black;
+	height: 100px;
+	width: 60px;
+	padding: 1em;
+	display: inline-block;
+}

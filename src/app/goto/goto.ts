@@ -7,6 +7,7 @@ export class State {
   clausurePosition: number;
   copy: boolean;
   expansion: State[];
+  stringRepresentation: string;
 
   constructor(Rule, number = 0, clausurePosition = 0, copy = false, expansion = []){
     this.rule = Rule;
@@ -14,7 +15,10 @@ export class State {
     this.clausurePosition = clausurePosition;
     this.copy = copy;
     this.expansion = expansion;
+    let recorrido = this.rule.getRigthSide().substr(0,this.clausurePosition) + '.' + this.rule.getRigthSide().substr(this.clausurePosition);
+    this.stringRepresentation = `${this.rule.getLeftSide()} -> ${recorrido}`;
   }
+
 
   isCopy = () => {
     return this.copy;
@@ -32,28 +36,38 @@ export class State {
     console.log(this.rule.print())
   }
 
-  print = () => {
+  print = (rules,list) => {
     const copy = this.isCopy() ? 'copia de' : '';
     console.log(`Estado ${copy} ${this.number}`);
     let recorrido = this.rule.getRigthSide().substr(0,this.clausurePosition) + '.' + this.rule.getRigthSide().substr(this.clausurePosition);
-    console.log(`${this.rule.getLeftSide()} -> ${recorrido}`);
-    
+    this.stringRepresentation = `${this.rule.getLeftSide()} -> ${recorrido}`;
+    console.log(this.stringRepresentation)
+    this.expand(this.clausurePosition,rules,list)
+    this.moveRight(rules,list)
   }
 
   expand (clausurePosition, rules, list) {
-    if(this.rule.getRigthSide().substr(clausurePosition,1).match(/[A-Z]/g)){
-      const toExpand = this.findRule(rules, this.rule.getRigthSide().substr(clausurePosition,1));
-      toExpand.forEach((obj)=>{
-        this.expansion = this.expansion.concat(new State(obj))
-      })
+    if(this.expansion.length > 0){
       console.log('------');
       this.expansion.forEach((expansion)=>{
-        expansion.print();
+        expansion.print(rules, list);
         expansion.expand(expansion.clausurePosition, rules, list)
         expansion.moveRight(rules, list);
       })
     }
 
+  }
+
+  checkExpand = (rules) => {
+    if(this.rule.getRigthSide().substr(this.clausurePosition,1).match(/[A-Z]/g)){
+      const toExpand = this.findRule(rules, this.rule.getRigthSide().substr(this.clausurePosition,1));
+      toExpand.forEach((obj)=>{
+        this.expansion = this.expansion.concat(new State(obj))
+      })
+      this.expansion.forEach((obj)=> {
+        obj.checkExpand(rules);
+      })
+    }
   }
 
   findRule(rules: Rule[], ruleToFind: string): Rule[]{
@@ -64,13 +78,25 @@ export class State {
   moveRight = (rules: Rule[], list: State[]) => {
     if(!this.clausureAtEnd()){
       let newState = new State(this.rule, this.number+1, this.clausurePosition+1);
-      newState.print();
-      newState.expand(newState.clausurePosition, rules, list)
+      //newState.print(rules,list);
+      //newState.expand(newState.clausurePosition, rules, list)
+      newState.checkExpand(rules);
       list.push(newState);
-      newState.moveRight(rules,list)
+      newState.expansion.forEach((obj)=>{
+        obj.moveRight(rules,list)
+      })
+      newState.moveRight(rules,list);
     }
     else
       console.log("Final de la regla")
+  }
+
+  toString = () => {
+    let aux = this.stringRepresentation;
+    this.expansion.forEach((exp)=>{
+      aux = aux+"\n"+exp.toString();
+    })
+    return aux;
   }
 
 }
