@@ -7,7 +7,7 @@
 </div>
 <div class="col-xs-12 text-center">
   <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>
-  <button type="button" class="btn btn-primary" (click)="startClosings()">IR_A</button>
+  <button [disabled]="reviewRules()" type="button" class="btn btn-primary" (click)="startClosings()">IR_A</button>
 </div>
 <div class="col-xs-12">
   <h2>Lado izquierdo: {{inputIzq}}</h2>

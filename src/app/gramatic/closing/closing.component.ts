@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Closing } from './closing';
 import { Rule } from '../rule/rule';
+import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
   selector: 'app-closing',
@@ -39,6 +40,7 @@ export class ClosingComponent {
 
   addRule = () => {
     let n = new Rule();
+    this.inputIzq = this.inputIzq.toUpperCase();
     n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
     n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
     this.inputDer = "";
@@ -148,4 +150,35 @@ export class ClosingComponent {
     }
   }
 
+  reviewRules = () => {
+      let band = false;
+      let band2 = false;
+      if (this.reglas.length !== 0) {
+          for (const rule of this.reglas) {
+            for (let c ; c < rule.der.length ; c++) {
+              const letra = rule.der.charAt(c);
+              if (letra.match("/[A-Z]/g")) {
+                band2 = true;
+                for (const rule2 of this.reglas){
+                  if (letra === rule2.izq){
+                    band = true;
+                  }
+                }
+              }
+            }
+          }
+              for (const rule of this.reglas) {
+                  if (rule.der.indexOf('#') !== -1) {
+                    if (band2) {
+                      if (band) {
+                        return false;
+                      }
+                    }else {
+                        return false;
+                    }
+                  }
+              }
+      }
+      return true;
+  }
 }
