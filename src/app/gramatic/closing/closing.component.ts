@@ -4,7 +4,8 @@ import { Rule } from '../rule/rule';
 
 @Component({
   selector: 'app-closing',
-  templateUrl: './closing.component.html'
+  templateUrl: './closing.component.html',
+  styleUrls: ['./closing.component.css']
 })
 export class ClosingComponent {
   closings: Closing[] = [];
@@ -45,9 +46,17 @@ export class ClosingComponent {
     this.reglas.push(n);
   }
 
+  notInPrevious = (close: Closing, rule: Rule) => {
+    let find = close.reglas.find(item => {
+      return (item.izq === rule.izq && item.der === rule.der);
+    });
+    return find != null;
+  }
+
   generateRules = (closing: Closing) => {
     for(let regla of closing.reglas){
-      if(regla.dotAdded == false && regla.der.indexOf('.') != -1 && typeof regla.der.indexOf('.')+1 != undefined && new RegExp('[A-Z]').test(regla.der[regla.der.indexOf('.')+1])){
+      if(regla.dotAdded == false && regla.der.indexOf('.') != -1 && regla.der.indexOf('.')+1 < regla.der.length && typeof regla.der.indexOf('.')+1 != undefined
+         && new RegExp('[A-Z]').test(regla.der[regla.der.indexOf('.')+1])){
         regla.dotAdded = true;
         let rules = this.reglas.filter(item => {
           return item.izq === regla.der[regla.der.indexOf('.')+1];
@@ -57,8 +66,10 @@ export class ClosingComponent {
           newR.izq = i.izq;
           newR.der = i.der;
           newR.der = [newR.der.slice(0,0) + '.' + newR.der.slice(0)].toString();
-          closing.reglas.push(newR);
-          this.generateRules(closing);
+          if(!this.notInPrevious(closing, newR)){
+            closing.reglas.push(newR);
+            this.generateRules(closing);
+          }
         }
       }
       regla.dotAdded = true;
@@ -80,31 +91,58 @@ export class ClosingComponent {
     this.makeClosings();
   }
 
+  checkCopy = (closing: Closing) => {
+    let flag = false;
+    for(let closes of this.closings){
+      if(closes.reglas.length == closing.reglas.length){
+        let sum = 0;
+        closes.reglas.forEach((value,i) => {
+          if(value.izq === closing.reglas[i].izq && value.der === closing.reglas[i].der){
+            sum+=1;
+          }
+        });
+        if(sum == closes.reglas.length){
+          flag = true;
+          break;
+        }
+      }
+    }
+    return flag;
+  }
+
   makeClosings = () => {
     for(let closing of this.closings){
-      for(let regla of closing.reglas){
-        let newC = new Closing();
-        if(regla.der.indexOf('.')+1 != -1 && typeof regla.der[regla.der.indexOf('.')+1] != undefined && regla.der.indexOf('.')+1 < regla.der.length && regla.der[regla.der.indexOf('.')+1] != '#' && regla.gramaticExpanded == false){
-          let rules = closing.reglas.filter(item => {
-            return regla !== item && item.der.indexOf('.') != -1 && item.der[item.der.indexOf('.')+1] == regla.der[regla.der.indexOf('.')+1];
-          });
-          for(let j of rules){
-            let newR = new Rule;
-            newR.izq = regla.izq;
-            newR.der = regla.der;
-            newR.der = [newR.der.slice(0,0) + '.' + newR.der.slice(0)].toString();
-            newC.reglas.push(j);
+      if(!closing.isCopy){
+        for(let regla of closing.reglas){
+          let newC = new Closing();
+          if(regla.der.indexOf('.')+1 != -1 && typeof regla.der[regla.der.indexOf('.')+1] != undefined && regla.der.indexOf('.')+1 < regla.der.length && regla.der[regla.der.indexOf('.')+1] != '#' && regla.gramaticExpanded == false){
+            let filtro = closing.reglas.filter(item => {
+              return item.der.indexOf('.') != -1
+                      && regla.der[regla.der.indexOf('.')+1] == item.der[item.der.indexOf('.')+1];
+            });
+            for(let fi of filtro){
+              regla.gramaticExpanded = true;
+              fi.gramaticExpanded = true;
+              let newR = new Rule;
+              newR.izq = fi.izq;
+              newR.der = fi.der;
+              let position = newR.der.indexOf('.')+1;
+              newR.der = newR.der.replace(/\./g, "");
+              newR.der = newR.der.substr(0, position) + '.' + newR.der.substr(position);
+              newR.dotApplied = true;
+              newC.reglas.push(newR);
+              this.generateRules(newC);
+              newC.isCopy = this.checkCopy(newC);
+              if(!newC.isCopy){
+                newC.index = this.closings.length;
+              }
+              newC.from = closing.index.toString();
+              newC.to = fi.der[fi.der.indexOf('.')+1];
+            }
+            this.closings.push(newC);
           }
-          let newR = new Rule;
-          newR.izq = regla.izq;
-          newR.der = regla.der;
-          let position = newR.der.indexOf('.')+1;
-          newR.der = newR.der.replace(/\./g, "");
-          newR.der = newR.der.substr(0, position) + '.' + newR.der.substr(position);
-          newC.reglas.push(newR);
-          this.closings.push(newC);
+          regla.gramaticExpanded = true;
         }
-        regla.gramaticExpanded = true;
       }
       //this.closings.push(newC);
     }

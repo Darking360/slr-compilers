@@ -1,0 +1,9 @@
+.borderFeo{
+  margin: 1em;
+  border: solid;
+}
+
+.borderBonito{
+  margin: 1em;
+  border: dotted solid;
+}

@@ -2,7 +2,7 @@ import { Rule } from '../rule/rule';
 
 export class Closing {
   reglas: Rule[] = [];
-  isCopy: boolean;
+  isCopy: boolean = false;
   index: number;
   from: string;
   to: string;

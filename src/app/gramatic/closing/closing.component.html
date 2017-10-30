@@ -23,11 +23,13 @@
 </div>
 <h2>Expansión de IR_A</h2>
 <div *ngIf="closings.length > 0" class="col-xs-12">
-  <div *ngFor="let closing of closings" class="col-xs-12">
+  <div *ngFor="let closing of closings" class="col-xs-12 {{closing.isCopy ? 'borderBonito' : 'borderFeo'}}">
+    <h3>Ir_a({{ closing.from }}, {{ closing.to }})</h3>
     <div *ngFor="let regla of closing.reglas" class="col-xs-12">
       <h3 class="col-xs-1">{{ regla.izq }}</h3>
       <h3 class="col-xs-1"> => </h3>
       <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
     </div>
+    <h3>I{{ closing.index }}</h3>
   </div>
 </div>
