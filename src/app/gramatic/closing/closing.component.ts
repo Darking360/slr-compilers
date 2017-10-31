@@ -112,6 +112,16 @@ export class ClosingComponent {
     return { flag, index };
   }
 
+  calculateFinals = () => {
+    for(let closing of this.closings){
+      for(let regla of closing.reglas){
+        if(!closing.isCopy && regla.der.indexOf('.')+1 != -1 && typeof regla.der[regla.der.indexOf('.')+1] == 'undefined'){
+          closing.isFinal = true;
+        }
+      }
+    }
+  }
+
   makeClosings = () => {
     for(let closing of this.closings){
       if(!closing.isCopy){
@@ -155,6 +165,7 @@ export class ClosingComponent {
       }
       //this.closings.push(newC);
     }
+    this.calculateFinals();
   }
 
 }

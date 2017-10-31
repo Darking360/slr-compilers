@@ -32,5 +32,6 @@
     </div>
     <h3 *ngIf="!closing.isCopy">I{{ closing.index }}</h3>
     <h3 *ngIf="closing.isCopy">#I{{ closing.index }}</h3>
+    <h5 *ngIf="closing.isFinal">Tomada en cuenta para reducción</h5>
   </div>
 </div>
