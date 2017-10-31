@@ -11,6 +11,8 @@ import {forEach} from "@angular/router/src/utils/collection";
 export class ClosingComponent {
   closings: Closing[] = [];
   reglas: Rule[] = [];
+  terminals: string[] = [];
+  non_terminals: string[] = [];
 
   inputIzq: string = "";
   inputDer: string = "";
@@ -46,6 +48,29 @@ export class ClosingComponent {
     this.inputDer = "";
     this.inputIzq = "";
     this.reglas.push(n);
+    this.non_terminals.push(n.izq);
+    let band = false;
+    for (let c = 0 ; c < n.der.length ; c++) {
+      if (n.der.charAt(c) === n.der.charAt(c).toUpperCase()) {
+        for (const nt of this.non_terminals) {
+          if (n.der.charAt(c) === nt) {
+            band = true;
+          }
+        }
+        if (!band) {
+          this.non_terminals.push(n.der.charAt(c));
+        }
+      }else {
+          for (const t of this.terminals) {
+              if (n.der.charAt(c) === t) {
+                  band = true;
+              }
+          }
+          if (!band) {
+              this.terminals.push(n.der.charAt(c));
+          }
+      }
+    }
   }
 
   notInPrevious = (close: Closing, rule: Rule) => {
@@ -151,31 +176,10 @@ export class ClosingComponent {
   }
 
   reviewRules = () => {
-      let band = false;
-      let band2 = false;
       if (this.reglas.length !== 0) {
-          for (const rule of this.reglas) {
-            for (let c ; c < rule.der.length ; c++) {
-              const letra = rule.der.charAt(c);
-              if (letra.match("/[A-Z]/g")) {
-                band2 = true;
-                for (const rule2 of this.reglas){
-                  if (letra === rule2.izq){
-                    band = true;
-                  }
-                }
-              }
-            }
-          }
               for (const rule of this.reglas) {
                   if (rule.der.indexOf('#') !== -1) {
-                    if (band2) {
-                      if (band) {
-                        return false;
-                      }
-                    }else {
-                        return false;
-                    }
+                    return false;
                   }
               }
       }
