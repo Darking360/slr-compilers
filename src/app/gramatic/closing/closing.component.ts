@@ -58,26 +58,29 @@ export class ClosingComponent {
     }
     if (!band){
       this.non_terminals.push(n.izq);
+      console.log('No terminal - ' + n.izq);
     }
-    band = false;
     for (let c = 0 ; c < n.der.length ; c++) {
-      if (n.der.charAt(c) === n.der.charAt(c).toUpperCase()) {
-        for (const nt of this.non_terminals) {
-          if (n.der.charAt(c) === nt) {
+      band = false;
+      if (n.der.charAt(c) === n.der.charAt(c).toLowerCase()) {
+        for (const t of this.terminals) {
+          if (n.der.charAt(c) === t) {
             band = true;
           }
         }
         if (!band) {
-          this.non_terminals.push(n.der.charAt(c));
+          this.terminals.push(n.der.charAt(c));
+          console.log('Terminal - ' + n.der.charAt(c));
         }
       }else {
-          for (const t of this.terminals) {
-              if (n.der.charAt(c) === t) {
+          for (const nt of this.non_terminals) {
+              if (n.der.charAt(c) === nt) {
                   band = true;
               }
           }
           if (!band) {
-              this.terminals.push(n.der.charAt(c));
+              this.non_terminals.push(n.der.charAt(c));
+              console.log('No terminal - ' + n.der.charAt(c));
           }
       }
     }
@@ -226,21 +229,21 @@ export class ClosingComponent {
     for (let i = 0 ; i < this.cantStates + 1 ; i++){
         this.table[i] = new Array(this.terminals.length + this.non_terminals.length);
     }
-    for (let closing = 1 ; closing < this.closings.length ; closing++) {
-      if (this.closings[closing].to !== this.closings[closing].to.toUpperCase()) {
-        for (let t = 0 ; t < this.terminals.length ; t++) {
-          if (this.closings[closing].to === this.terminals[t]) {
-            this.table[this.closings[closing].from][t] = 'D' + this.closings[closing].index;
+      for (let closing = 1 ; closing < this.closings.length ; closing++) {
+        if (this.closings[closing].to !== this.closings[closing].to.toLowerCase()) {
+          for (let nt = 0 ; nt < this.non_terminals.length ; nt++) {
+            if (this.closings[closing].to === this.non_terminals[nt]) {
+              this.table[this.closings[closing].from][nt] = this.closings[closing].index;
+            }
           }
+        }else {
+            for (let t = 0 ; t < this.terminals.length ; t++) {
+                if (this.closings[closing].to === this.terminals[t]) {
+                    this.table[this.closings[closing].from][t + this.non_terminals.length] = 'D' + this.closings[closing].index;
+                }
+            }
         }
-      }else {
-          for (let t = 0 ; t < this.terminals.length ; t++) {
-              if (this.closings[closing].to === this.non_terminals[t]) {
-                  this.table[this.closings[closing].from][t] = this.closings[closing].index;
-              }
-          }
       }
-    }
   }
 
   reviewClosings = () => {
