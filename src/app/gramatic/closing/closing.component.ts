@@ -120,6 +120,7 @@ export class ClosingComponent {
 
   checkCopy = (closing: Closing) => {
     let flag = false;
+    let index = -1;
     for(let closes of this.closings){
       if(closes.reglas.length == closing.reglas.length){
         let sum = 0;
@@ -130,11 +131,22 @@ export class ClosingComponent {
         });
         if(sum == closes.reglas.length){
           flag = true;
+          index = closes.index;
           break;
         }
       }
     }
-    return flag;
+    return { flag, index };
+  }
+
+  calculateFinals = () => {
+    for(let closing of this.closings){
+      for(let regla of closing.reglas){
+        if(!closing.isCopy && regla.der.indexOf('.')+1 != -1 && typeof regla.der[regla.der.indexOf('.')+1] == 'undefined'){
+          closing.isFinal = true;
+        }
+      }
+    }
   }
 
   makeClosings = () => {
@@ -159,9 +171,16 @@ export class ClosingComponent {
               newR.dotApplied = true;
               newC.reglas.push(newR);
               this.generateRules(newC);
-              newC.isCopy = this.checkCopy(newC);
-              if(!newC.isCopy){
-                newC.index = this.closings.length;
+              let data = this.checkCopy(newC);
+              if(data.flag){
+                newC.isCopy = true;
+                newC.index = data.index;
+              }else{
+                let f = this.closings.filter(item => {
+                  return item.isCopy;
+                });
+                newC.isCopy = false;
+                newC.index = this.closings.length - f.length;
               }
               newC.from = closing.index.toString();
               newC.to = fi.der[fi.der.indexOf('.')+1];
@@ -173,6 +192,7 @@ export class ClosingComponent {
       }
       //this.closings.push(newC);
     }
+    this.calculateFinals();
   }
 
   reviewRules = () => {

@@ -6,5 +6,6 @@ export class Closing {
   index: number;
   from: string;
   to: string;
+  isFinal: boolean = false;
 
 }
