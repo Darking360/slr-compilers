@@ -30,6 +30,7 @@
       <h3 class="col-xs-1"> => </h3>
       <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
     </div>
-    <h3>I{{ closing.index }}</h3>
+    <h3 *ngIf="!closing.isCopy">I{{ closing.index }}</h3>
+    <h3 *ngIf="closing.isCopy">#I{{ closing.index }}</h3>
   </div>
 </div>
