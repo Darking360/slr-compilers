@@ -8,6 +8,7 @@
 <div class="col-xs-12 text-center">
   <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>
   <button [disabled]="reviewRules()" type="button" class="btn btn-primary" (click)="startClosings()">IR_A</button>
+  <button [disabled]="reviewClosings()" type="button" class="btn btn-primary" (click)="generateTable()">Tabla Reduccion / Desplazamiento</button>
 </div>
 <div class="col-xs-12">
   <h2>Lado izquierdo: {{inputIzq}}</h2>
@@ -34,4 +35,22 @@
     <h3 *ngIf="closing.isCopy">#I{{ closing.index }}</h3>
     <h5 *ngIf="closing.isFinal">Tomada en cuenta para reducción</h5>
   </div>
+</div>
+<h2>Tabla Reduccion / Desplazamiento</h2>
+<div *ngIf="table.length > 0" class="col-xs-12">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Estado</th>
+        <th *ngFor="let t of terminals">{{ t }}</th>
+        <th *ngFor="let nt of non_terminals">{{ nt }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of table">
+        <td></td>
+        <td *ngFor="let element of row">{{ element }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

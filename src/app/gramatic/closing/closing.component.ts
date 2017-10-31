@@ -13,6 +13,8 @@ export class ClosingComponent {
   reglas: Rule[] = [];
   terminals: string[] = [];
   non_terminals: string[] = [];
+  table: string[][] = [];
+  cantStates: number;
 
   inputIzq: string = "";
   inputDer: string = "";
@@ -48,8 +50,16 @@ export class ClosingComponent {
     this.inputDer = "";
     this.inputIzq = "";
     this.reglas.push(n);
-    this.non_terminals.push(n.izq);
     let band = false;
+    for (const nt of this.non_terminals) {
+      if (n.izq === nt) {
+        band = true;
+      }
+    }
+    if (!band){
+      this.non_terminals.push(n.izq);
+    }
+    band = false;
     for (let c = 0 ; c < n.der.length ; c++) {
       if (n.der.charAt(c) === n.der.charAt(c).toUpperCase()) {
         for (const nt of this.non_terminals) {
@@ -204,5 +214,39 @@ export class ClosingComponent {
               }
       }
       return true;
+  }
+
+  generateTable = () => {
+    this.cantStates = 0;
+    for (const closing of this.closings){
+      if (closing.index > this.cantStates) {
+          this.cantStates = closing.index;
+      }
+    }
+    for (let i = 0 ; i < this.cantStates + 1 ; i++){
+        this.table[i] = new Array(this.terminals.length + this.non_terminals.length);
+    }
+    for (let closing = 1 ; closing < this.closings.length ; closing++) {
+      if (this.closings[closing].to !== this.closings[closing].to.toUpperCase()) {
+        for (let t = 0 ; t < this.terminals.length ; t++) {
+          if (this.closings[closing].to === this.terminals[t]) {
+            this.table[this.closings[closing].from][t] = 'D' + this.closings[closing].index;
+          }
+        }
+      }else {
+          for (let t = 0 ; t < this.terminals.length ; t++) {
+              if (this.closings[closing].to === this.non_terminals[t]) {
+                  this.table[this.closings[closing].from][t] = this.closings[closing].index;
+              }
+          }
+      }
+    }
+  }
+
+  reviewClosings = () => {
+    if (this.closings.length !== 0) {
+      return false;
+    }
+    return true;
   }
 }
