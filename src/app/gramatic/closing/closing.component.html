@@ -42,13 +42,13 @@
     <thead>
       <tr>
         <th>Estado</th>
-        <th *ngFor="let t of terminals">{{ t }}</th>
         <th *ngFor="let nt of non_terminals">{{ nt }}</th>
+        <th *ngFor="let t of terminals">{{ t }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let row of table">
-        <td></td>
+      <tr *ngFor="let row of table ; let i=index">
+        <td>{{ i }}</td>
         <td *ngFor="let element of row">{{ element }}</td>
       </tr>
     </tbody>

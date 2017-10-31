@@ -244,6 +244,11 @@ export class ClosingComponent {
             }
         }
       }
+      for (let t = 0 ; t < this.terminals.length ; t++) {
+          if ('#' === this.terminals[t]) {
+              this.table[1][t] = 'OK';
+          }
+      }
   }
 
   reviewClosings = () => {
