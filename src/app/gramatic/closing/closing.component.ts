@@ -15,6 +15,7 @@ export class ClosingComponent {
   non_terminals: string[] = [];
   table: string[][] = [];
   cantStates: number;
+  usedGrammar: Rule[] = [];
 
   inputIzq: string = "";
   inputDer: string = "";
@@ -139,19 +140,27 @@ export class ClosingComponent {
     }
   }
 
+
   startClosings = () => {
-    let initial = this.reglas.find(item => {
-      return item.der.indexOf('#') != -1;
+    const sameGrammar = (this.usedGrammar.length == this.reglas.length) && this.usedGrammar.every((element, index) => {
+      return element === this.reglas[index]; 
     });
-    let newC = new Closing();
-    let newR = new Rule;
-    newR.izq = initial.izq;
-    newR.der = [initial.der.slice(0,0) + '.' + initial.der.slice(0)].toString();
-    newC.reglas.push(newR);
-    newC.index = 0;
-    this.generateRules(newC);
-    this.closings.push(newC);
-    this.makeClosings();
+    if(!sameGrammar){
+       this.closings = [];
+       this.usedGrammar = this.reglas.concat();
+      let initial = this.reglas.find(item => {
+        return item.der.indexOf('#') != -1;
+      });
+      let newC = new Closing();
+      let newR = new Rule;
+      newR.izq = initial.izq;
+      newR.der = [initial.der.slice(0,0) + '.' + initial.der.slice(0)].toString();
+      newC.reglas.push(newR);
+      newC.index = 0;
+      this.generateRules(newC);
+      this.closings.push(newC);
+      this.makeClosings();
+    }
   }
 
   checkCopy = (closing: Closing) => {
