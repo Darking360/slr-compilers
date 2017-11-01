@@ -60,3 +60,15 @@
 .table .element {
 	width: 10ch;
 }
+
+.glyphicon-remove-circle:hover {
+	font-size: 35px;
+}
+
+.glyphicon-remove-circle {
+	color: red;
+	font-size: 30px;
+	cursor: pointer;
+	margin-top: 15px;
+    margin-left: -45px;
+}

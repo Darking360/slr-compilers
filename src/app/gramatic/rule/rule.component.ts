@@ -27,7 +27,6 @@ export class RuleComponent {
   }
 
 
-
   firstNested = (rule: Rule, character: string, chain: string, index: number) => {
     for(let regla of this.reglas){
       if(new RegExp(character).test(regla.izq)){

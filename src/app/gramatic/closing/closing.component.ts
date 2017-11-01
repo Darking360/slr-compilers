@@ -102,6 +102,13 @@ export class ClosingComponent {
     })
   }
 
+  removeRule = (toRemove: Rule) => {
+    if(toRemove.der.includes('#'))
+      alert('No se puede borrar la regla primaria')
+    else
+      this.reglas.splice(this.reglas.findIndex(rule => rule.izq === toRemove.izq && rule.der === toRemove.der))
+  }
+
   notInPrevious = (close: Closing, rule: Rule) => {
     let find = close.reglas.find(item => {
       return (item.izq === rule.izq && item.der === rule.der);
