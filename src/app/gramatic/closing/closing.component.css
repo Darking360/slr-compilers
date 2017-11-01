@@ -72,3 +72,13 @@
 	margin-top: 15px;
     margin-left: -45px;
 }
+
+.show-table, .show-go-to {
+	font-size: 18pt;
+	margin: 5px;
+	cursor: pointer;
+}
+
+.table-title, .go-to-title {
+	display: inline-block;
+}

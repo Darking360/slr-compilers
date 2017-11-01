@@ -16,6 +16,9 @@ export class ClosingComponent {
   table: string[][] = [];
   cantStates: number;
   usedGrammar: Rule[] = [];
+  showTable = true;
+  showGoTo = true;
+
 
   inputIzq: string = "";
   inputDer: string = "";
@@ -288,6 +291,14 @@ export class ClosingComponent {
       return false;
     }
     return true;
+  }
+
+  toggleTable = () => {
+    this.showTable = !this.showTable;
+  }
+
+  toggleGoTo = () => {
+    this.showGoTo = !this.showGoTo;
   }
 
 }
