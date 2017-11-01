@@ -49,39 +49,47 @@ export class ClosingComponent {
     n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
     this.inputDer = "";
     this.inputIzq = "";
-    this.reglas.push(n);
-    let band = false;
-    for (const nt of this.non_terminals) {
-      if (n.izq === nt) {
-        band = true;
+    if(n.der.endsWith('#')){
+      alert("No es posible agregar una regla con final de cadena")
+    }
+    else{
+      if (this.reglas.length === 0 ){
+        this.reglas.push(new Rule(n.izq + "'", n.izq + '#'))
       }
-    }
-    if (!band){
-      this.non_terminals.push(n.izq);
-      console.log('No terminal - ' + n.izq);
-    }
-    for (let c = 0 ; c < n.der.length ; c++) {
-      band = false;
-      if (n.der.charAt(c) === n.der.charAt(c).toLowerCase()) {
-        for (const t of this.terminals) {
-          if (n.der.charAt(c) === t) {
-            band = true;
-          }
+      this.reglas.push(n);
+      let band = false;
+      for (const nt of this.non_terminals) {
+        if (n.izq === nt) {
+          band = true;
         }
-        if (!band) {
-          this.terminals.push(n.der.charAt(c));
-          console.log('Terminal - ' + n.der.charAt(c));
-        }
-      }else {
-          for (const nt of this.non_terminals) {
-              if (n.der.charAt(c) === nt) {
-                  band = true;
-              }
+      }
+      if (!band){
+        this.non_terminals.push(n.izq);
+        console.log('No terminal - ' + n.izq);
+      }
+      for (let c = 0 ; c < n.der.length ; c++) {
+        band = false;
+        if (n.der.charAt(c) === n.der.charAt(c).toLowerCase()) {
+          for (const t of this.terminals) {
+            if (n.der.charAt(c) === t) {
+              band = true;
+            }
           }
           if (!band) {
-              this.non_terminals.push(n.der.charAt(c));
-              console.log('No terminal - ' + n.der.charAt(c));
+            this.terminals.push(n.der.charAt(c));
+            console.log('Terminal - ' + n.der.charAt(c));
           }
+        }else {
+            for (const nt of this.non_terminals) {
+                if (n.der.charAt(c) === nt) {
+                    band = true;
+                }
+            }
+            if (!band) {
+                this.non_terminals.push(n.der.charAt(c));
+                console.log('No terminal - ' + n.der.charAt(c));
+            }
+        }
       }
     }
   }

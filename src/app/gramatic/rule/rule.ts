@@ -8,10 +8,12 @@ export class Rule {
   gramaticExpanded: boolean = false;
   dotApplied: boolean = false;
 
-  constructor(){
+  constructor(leftSide = '', rightSide = ''){
     this.firstOnes = [];
     this.lastOnes = [];
     this.firstOne = [];
+    this.izq = leftSide;
+    this.der = rightSide;
   }
 
   searchEmpty = () => {
