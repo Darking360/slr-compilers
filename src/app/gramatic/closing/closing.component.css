@@ -1,9 +1,27 @@
-.borderFeo{
-  margin: 1em;
-  border: solid;
+.goto-rectangle {
+	border: 1px solid black;
+	min-height: 130px;
+	width: 100px;
+	padding: 10px;
+	display: inline-block;
+	margin: 0 1em;
+	text-align: left;
 }
 
-.borderBonito{
-  margin: 1em;
-  border: dotted solid;
+.rectangle-container {
+	display: inline-block;
+	vertical-align: top;
+	margin: 15px 0;
+}
+
+.state-text {
+}
+
+.copy-state {
+	border: 2px solid blue;
+}
+
+.use-reduction {
+	max-width: 15ch;
+    text-align: center;
 }

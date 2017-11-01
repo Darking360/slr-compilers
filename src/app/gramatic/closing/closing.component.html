@@ -24,16 +24,15 @@
 </div>
 <h2>Expansión de IR_A</h2>
 <div *ngIf="closings.length > 0" class="col-xs-12">
-  <div *ngFor="let closing of closings" class="col-xs-12 {{closing.isCopy ? 'borderBonito' : 'borderFeo'}}">
-    <h3>Ir_a({{ closing.from }}, {{ closing.to }})</h3>
-    <div *ngFor="let regla of closing.reglas" class="col-xs-12">
-      <h3 class="col-xs-1">{{ regla.izq }}</h3>
-      <h3 class="col-xs-1"> => </h3>
-      <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
-    </div>
-    <h3 *ngIf="!closing.isCopy">I{{ closing.index }}</h3>
-    <h3 *ngIf="closing.isCopy">#I{{ closing.index }}</h3>
-    <h5 *ngIf="closing.isFinal">Tomada en cuenta para reducción</h5>
+  <div *ngFor="let closing of closings" class="rectangle-container">
+    <div>Ir_a(I<sub>{{closing.from}}</sub>,{{closing.to}})</div>
+    <section [ngClass]="(closing.isACopy())?'goto-rectangle copy-state':'goto-rectangle'">
+      <div *ngFor="let regla of closing.reglas" class="state-text">
+        {{regla.toString()}}
+      </div>
+    </section>
+    <div><span *ngIf="closing.isACopy()">#</span>I<sub>{{closing.index}}</sub></div>
+    <div *ngIf="closing.isFinal" class="use-reduction">Tomada en cuenta para reducción</div>
   </div>
 </div>
 <h2>Tabla Reduccion / Desplazamiento</h2>

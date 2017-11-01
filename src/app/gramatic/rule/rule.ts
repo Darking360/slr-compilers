@@ -16,6 +16,10 @@ export class Rule {
     this.der = rightSide;
   }
 
+  toString = () => {
+    return this.izq + ' -> ' + this.der
+  }
+
   searchEmpty = () => {
     return this.firstOnes.indexOf('?') != -1;
   }
