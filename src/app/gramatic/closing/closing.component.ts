@@ -18,13 +18,9 @@ export class ClosingComponent {
 
   inputIzq: string = "";
   inputDer: string = "";
+  completeGrammar: string = "";
 
   constructor(){
-    let cadena = "ABC";
-    let position = 0;
-    console.log([cadena.slice(0,position) + '.' + cadena.slice(position)]);
-    position = 1;
-    console.log([cadena.slice(0,position) + '.' + cadena.slice(position)]);
   }
 
   canAdd = () => {
@@ -42,11 +38,13 @@ export class ClosingComponent {
       return true;
   }
 
-  addRule = () => {
-    let n = new Rule();
+  addRule = (rule?: Rule) => {
+    let n = rule || new Rule();
     this.inputIzq = this.inputIzq.toUpperCase();
-    n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
-    n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
+    if(!rule){
+      n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
+      n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
+    }
     this.inputDer = "";
     this.inputIzq = "";
     document.getElementById('inputIzq').focus();
@@ -93,6 +91,13 @@ export class ClosingComponent {
         }
       }
     }
+  }
+
+  createGrammar = () => {
+    this.completeGrammar.split('\n').forEach(rule => {
+      const aux = new Rule(rule.split('->')[0].trim(), rule.split('->')[1].trim())
+      this.addRule(aux);
+    })
   }
 
   notInPrevious = (close: Closing, rule: Rule) => {
@@ -266,4 +271,5 @@ export class ClosingComponent {
     }
     return true;
   }
+
 }

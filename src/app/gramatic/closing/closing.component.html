@@ -5,6 +5,10 @@
   <label>Lado derecho</label>
   <input type="text" (keyup.enter)="addRule()" [(ngModel)]="inputDer">
 </div>
+<div class="grammar-creation">
+  <textarea class="grammar-area" id="grammarArea" placeholder="Pega toda la gramatica para generarla en el boton" [(ngModel)]="completeGrammar"></textarea>
+  <button type="button" class="btn btn-success generate-grammar" (click)="createGrammar()">Generar gramatica</button>
+</div>
 <div class="col-xs-12 text-center">
   <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>
   <button [disabled]="reviewRules()" type="button" class="btn btn-primary" (click)="startClosings()">IR_A</button>
@@ -19,7 +23,7 @@
   <div *ngFor="let regla of reglas" class="col-xs-12">
     <h3 class="col-xs-1">{{ regla.izq }}</h3>
     <h3 class="col-xs-1"> => </h3>
-    <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
+    <h3 class="col-xs-2">  {{ "{"+regla.der+"}" }}</h3>
   </div>
 </div>
 <h2>Expansión de IR_A</h2>
@@ -37,7 +41,7 @@
 </div>
 <h2>Tabla Reduccion / Desplazamiento</h2>
 <div *ngIf="table.length > 0" class="col-xs-12">
-  <table class="table">
+  <table class="table table-hover table-bordered">
     <thead>
       <tr>
         <th>Estado</th>
@@ -47,8 +51,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let row of table ; let i=index">
-        <td>{{ i }}</td>
-        <td *ngFor="let element of row">{{ element }}</td>
+        <td class="state">{{ i }}</td>
+        <td class="element" *ngFor="let element of row">{{ element }}</td>
       </tr>
     </tbody>
   </table>

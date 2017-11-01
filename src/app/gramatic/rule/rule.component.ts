@@ -26,14 +26,7 @@ export class RuleComponent {
       return true;
   }
 
-  addRule = () => {
-    let n = new Rule();
-    n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
-    n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
-    this.inputDer = "";
-    this.inputIzq = "";
-    this.reglas.push(n);
-  }
+
 
   firstNested = (rule: Rule, character: string, chain: string, index: number) => {
     for(let regla of this.reglas){

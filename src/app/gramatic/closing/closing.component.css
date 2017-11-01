@@ -25,3 +25,38 @@
 	max-width: 15ch;
     text-align: center;
 }
+
+.grammar-area {
+	resize: none;
+	width: 30ch;
+    line-height: 1;
+    height: 10em;
+}
+
+.generate-grammar {
+	vertical-align: top;
+	margin-top: 3em;
+}
+
+.grammar-creation {
+	margin: 10px 0;
+}
+
+.table th{
+	text-align: center;
+}
+
+.table .state {
+	width: 5ch;
+}
+
+.table {
+	left: 0;
+	margin: auto;
+	right: 0;
+	width: 80%;
+}
+
+.table .element {
+	width: 10ch;
+}
