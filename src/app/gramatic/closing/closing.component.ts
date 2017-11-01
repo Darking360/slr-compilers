@@ -166,7 +166,7 @@ export class ClosingComponent {
     }
     else{
       if (this.reglas.length === 0 ){
-        this.reglas.push(new Rule(n.izq + "'", n.izq + '#'))
+        this.reglas.push(new Rule(n.izq, n.izq + '#'))
       }
       this.reglas.push(n);
       let band = false;

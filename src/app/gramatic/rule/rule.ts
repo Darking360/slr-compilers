@@ -17,7 +17,8 @@ export class Rule {
   }
 
   toString = () => {
-    return this.izq + ' -> ' + this.der
+    const hashRule = this.der.endsWith('#') ? "'" : '';
+    return this.izq + hashRule + ' -> ' + this.der
   }
 
   searchEmpty = () => {

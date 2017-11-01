@@ -22,16 +22,16 @@
 <div *ngIf="reglas.length > 0" class="col-xs-12">
   <h2 >Reglas de la gramatica</h2>
   <div *ngFor="let regla of reglas" class="col-xs-12">
-    <i (click)="removeRule(regla)" class=" col-xs-1 glyphicon glyphicon-remove-circle"></i>
-    <h3 class="col-xs-1">{{ regla.izq }}</h3>
-    <h3 class="col-xs-1"> => </h3>
-    <h3 class="col-xs-2">  {{ "{"+regla.der+"}" }}</h3>
-    <h3 class="col-xs-1"> Primeros regla: </h3>
-    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOne.join(", ") }}</h3>
-    <h3 class="col-xs-1"> Primeros: </h3>
-    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-2">{{ regla.firstOnes.join(", ") }}</h3>
-    <h3 class="col-xs-1"> Siguientes: </h3>
-    <h3 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h3>
+    <i (click)="removeRule(regla)" class=" glyphicon glyphicon-remove-circle"></i>
+    <h4 class="col-xs-1">{{ regla.izq }}<span *ngIf="regla.der.endsWith('#')">'</span></h4>
+    <h4 class="col-xs-1"> => </h4>
+    <h4 class="col-xs-2">  {{ "{"+regla.der+"}" }}</h4>
+    <h4 class="col-xs-1"> Primeros regla: </h4>
+    <h4 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOne.join(", ") }}</h4>
+    <h4 class="col-xs-1"> Primeros: </h4>
+    <h4 *ngIf="regla.firstOnes.length > 0" class="col-xs-2">{{ regla.firstOnes.join(", ") }}</h4>
+    <h4 class="col-xs-1"> Siguientes: </h4>
+    <h4 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h4>
   </div>
 </div>
 <div *ngIf="closings.length > 0" class="col-xs-12">
