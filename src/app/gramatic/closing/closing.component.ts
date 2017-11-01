@@ -95,8 +95,10 @@ export class ClosingComponent {
 
   createGrammar = () => {
     this.completeGrammar.split('\n').forEach(rule => {
-      const aux = new Rule(rule.split('->')[0].trim(), rule.split('->')[1].trim())
-      this.addRule(aux);
+      if(!rule.endsWith('#')){
+        const aux = new Rule(rule.split('->')[0].trim(), rule.split('->')[1].trim())
+        this.addRule(aux);
+      }
     })
   }
 
