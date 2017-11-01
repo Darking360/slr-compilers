@@ -124,6 +124,14 @@ export class RuleComponent {
     for(let regla of this.reglas){
       regla.makeUnique();
     }
+    for(let regla of this.reglas){
+      let filter = this.reglas.filter(item => {
+        return new RegExp(regla.izq).test(item.izq)
+      });
+      for(let inex of filter){
+        regla.firstOnes = regla.firstOnes.concat(inex.firstOne);
+      }
+    }
     //Going to find last ones from here
     for(let regla of this.reglas){
       regla.lastOnes = regla.lastOnes.concat(this.recursiveNextOnes(regla.izq));
