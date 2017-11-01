@@ -1,9 +1,9 @@
 <div class="form-group col-xs-12">
   <label>Lado izquierdo</label>
-  <input type="text" [(ngModel)]="inputIzq">
+  <input id="inputIzq" type="text" [(ngModel)]="inputIzq">
   <label> -----> </label>
   <label>Lado derecho</label>
-  <input type="text" [(ngModel)]="inputDer">
+  <input type="text" (keyup.enter)="addRule()" [(ngModel)]="inputDer">
 </div>
 <div class="col-xs-12 text-center">
   <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>

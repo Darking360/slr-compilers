@@ -49,6 +49,7 @@ export class ClosingComponent {
     n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
     this.inputDer = "";
     this.inputIzq = "";
+    document.getElementById('inputIzq').focus();
     if(n.der.endsWith('#')){
       alert("No es posible agregar una regla con final de cadena")
     }
