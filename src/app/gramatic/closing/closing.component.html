@@ -11,6 +11,7 @@
 </div>
 <div class="col-xs-12 text-center">
   <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>
+  <button [disabled]="this.reglas.length === 0" type="button" class="btn btn-primary" (click)="findFirstAndLastOnes()">Primeros + Siguientes</button>
   <button [disabled]="reviewRules()" type="button" class="btn btn-primary" (click)="startClosings()">IR_A</button>
   <button [disabled]="reviewClosings()" type="button" class="btn btn-primary" (click)="generateTable()">Tabla Reduccion / Desplazamiento</button>
 </div>
@@ -21,10 +22,16 @@
 <div *ngIf="reglas.length > 0" class="col-xs-12">
   <h2 >Reglas de la gramatica</h2>
   <div *ngFor="let regla of reglas" class="col-xs-12">
+    <i (click)="removeRule(regla)" class=" col-xs-1 glyphicon glyphicon-remove-circle"></i>
     <h3 class="col-xs-1">{{ regla.izq }}</h3>
     <h3 class="col-xs-1"> => </h3>
     <h3 class="col-xs-2">  {{ "{"+regla.der+"}" }}</h3>
-    <i (click)="removeRule(regla)" class=" col-xs-1 glyphicon glyphicon-remove-circle"></i>
+    <h3 class="col-xs-1"> Primeros regla: </h3>
+    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOne.join(", ") }}</h3>
+    <h3 class="col-xs-1"> Primeros: </h3>
+    <h3 *ngIf="regla.firstOnes.length > 0" class="col-xs-2">{{ regla.firstOnes.join(", ") }}</h3>
+    <h3 class="col-xs-1"> Siguientes: </h3>
+    <h3 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h3>
   </div>
 </div>
 <div *ngIf="closings.length > 0" class="col-xs-12">
