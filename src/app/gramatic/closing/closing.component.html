@@ -16,7 +16,8 @@
 </div>
 <h2>Reglas de la gramatica</h2>
 <div *ngIf="reglas.length > 0" class="col-xs-12">
-  <div *ngFor="let regla of reglas" class="col-xs-12">
+  <div *ngFor="let regla of reglas ; let i=index" class="col-xs-12">
+    <h3 class="col-xs-1">{{ i }}.)</h3>
     <h3 class="col-xs-1">{{ regla.izq }}</h3>
     <h3 class="col-xs-1"> => </h3>
     <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>

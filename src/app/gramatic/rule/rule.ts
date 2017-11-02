@@ -7,6 +7,7 @@ export class Rule {
   dotAdded:  boolean = false;
   gramaticExpanded: boolean = false;
   dotApplied: boolean = false;
+  isFinal: boolean = false;
 
   constructor(){
     this.firstOnes = [];

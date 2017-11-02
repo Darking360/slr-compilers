@@ -157,6 +157,7 @@ export class ClosingComponent {
       for(let regla of closing.reglas){
         if(!closing.isCopy && regla.der.indexOf('.')+1 != -1 && typeof regla.der[regla.der.indexOf('.')+1] == 'undefined'){
           closing.isFinal = true;
+          regla.isFinal = true;
         }
       }
     }
@@ -221,6 +222,7 @@ export class ClosingComponent {
 
   generateTable = () => {
     this.cantStates = 0;
+    // DESPLAZAMIENTOS
     for (const closing of this.closings){
       if (closing.index > this.cantStates) {
           this.cantStates = closing.index;
@@ -244,6 +246,18 @@ export class ClosingComponent {
             }
         }
       }
+
+      //REDUCCIONES
+      for (const closing of this.closings) {
+        if (closing.isFinal) {
+          for (const rule of closing.reglas) {
+            if (rule.isFinal) {
+              console.log(rule.izq + '->' + rule.der + '     siguientes:' + rule.lastOnes);
+            }
+          }
+        }
+      }
+
       for (let t = 0 ; t < this.terminals.length ; t++) {
           if ('#' === this.terminals[t]) {
               this.table[1][t] = 'OK';
