@@ -425,6 +425,7 @@ export class ClosingComponent {
               this.table[1][t + this.non_terminals.length] = 'OK';
           }
       }
+      console.log(this.table)
   }
 
   reviewClosings = () => {
