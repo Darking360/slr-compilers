@@ -392,15 +392,25 @@ export class ClosingComponent {
       }
 
       //REDUCCIONES
+      /*let reduccion = '';
       for (const closing of this.closings) {
         if (closing.isFinal) {
           for (const rule of closing.reglas) {
             if (rule.isFinal) {
-              console.log(rule.izq + '->' + rule.der + '     siguientes:' + rule.lastOnes);
+              for (let r = 0 ; r < this.reglas.length ; r++) {
+                if (rule.izq === this.reglas[r].izq && rule.der === this.reglas[r].der) {
+                  reduccion = 'R' + r;
+                }
+              }
+              for (let t = 0 ; t < this.terminals.length ; t++) {
+                if (siguiente === this.terminals[t]) {
+                  this.table[closing.index][t] = reduccion;
+                }
+              }
             }
           }
         }
-      }
+      }*/
 
       for (let t = 0 ; t < this.terminals.length ; t++) {
           if ('#' === this.terminals[t]) {
