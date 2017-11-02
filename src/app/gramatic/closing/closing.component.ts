@@ -15,16 +15,125 @@ export class ClosingComponent {
   non_terminals: string[] = [];
   table: string[][] = [];
   cantStates: number;
+  usedGrammar: Rule[] = [];
+  showTable = true;
+  showGoTo = true;
+
 
   inputIzq: string = "";
   inputDer: string = "";
+  completeGrammar: string = "";
 
   constructor(){
-    let cadena = "ABC";
-    let position = 0;
-    console.log([cadena.slice(0,position) + '.' + cadena.slice(position)]);
-    position = 1;
-    console.log([cadena.slice(0,position) + '.' + cadena.slice(position)]);
+  }
+
+  firstNested = (rule: Rule, character: string, chain: string, index: number) => {
+    for(let regla of this.reglas){
+      if(new RegExp(character).test(regla.izq)){
+        if(regla.searchEmpty()){
+          rule.firstOne = rule.firstOne.concat(regla.firstOnes);
+          rule.firstOne = rule.firstOne.filter(item => {
+            return item !== '?';
+          });
+          rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
+          if(index + 1 !== chain.length){
+            rule.firstOnes = rule.firstOnes.filter(item => {
+              return item !== '?';
+            });
+          }
+          if(index <= chain.length)
+            this.firstNested(rule,chain[index+1], chain, index+1);
+          else
+            break;
+        }else{
+          rule.firstOne = rule.firstOne.concat(regla.firstOnes);
+          rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
+        }
+        break;
+      }
+    }
+  }
+
+  checkLeftFirstOnes = () => {
+    for(let regla of this.reglas){
+      if(regla.firstOne.length == 0)
+        return true;
+    }
+    return false;
+  }
+
+  recursiveNextOnes = (rule: string) => {
+    let nextOnes = [];
+    let find = this.reglas.filter(item => {
+      return item.der.indexOf(rule) != -1 ;
+    });
+    for(let busq of find){
+      if(typeof busq.der[busq.der.indexOf(rule)+1] != 'undefined' && new RegExp('[A-Z]').test(busq.der[busq.der.indexOf(rule)+1])){
+        let hall = this.reglas.find(item => {
+          return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
+        });
+        if(hall.searchEmpty()){
+          nextOnes = nextOnes.concat(hall.firstOnes);
+          nextOnes = nextOnes.filter(item => {
+            return item !== '?';
+          });
+           nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
+        }else{
+          let hall = this.reglas.find(item => {
+            return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
+          });
+          nextOnes = nextOnes.concat(hall.firstOnes);
+        }
+      }else if(typeof busq.der[busq.der.indexOf(rule)+1] != 'undefined' && !new RegExp('[A-Z]').test(busq.der[busq.der.indexOf(rule)+1])){
+        nextOnes.push(busq.der[busq.der.indexOf(rule)+1]);
+      }else if(busq.der.indexOf(rule) != -1 && (busq.der.indexOf(rule) + 1) == busq.der.length && busq.der[busq.der.indexOf(rule)] != busq.izq){
+        nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
+      }
+    }
+    return nextOnes;
+  }
+
+  findFirstAndLastOnes = () => {
+    for(let regla of this.reglas){
+      if(!/[A-Z]/.test(regla.der[0]) && typeof regla.der[0] != 'undefined' && regla.der[0] != null)
+        regla.firstOne.push(regla.der[0]);
+    }
+    for(let regla of this.reglas){
+      let filter = this.reglas.filter(item => {
+        return new RegExp(regla.izq).test(item.izq)
+      });
+      for(let inex of filter){
+        regla.firstOnes = regla.firstOnes.concat(inex.firstOne);
+      }
+    }
+    while(this.checkLeftFirstOnes()){
+      for(let regla of this.reglas){
+        if(/[A-Z]/.test(regla.der[0])){
+          this.firstNested(regla, regla.der[0], regla.der, 0);
+        }
+      }
+    }
+    for(let regla of this.reglas){
+      regla.makeUnique();
+    }
+    for(let regla of this.reglas){
+      let filter = this.reglas.filter(item => {
+        return new RegExp(regla.izq).test(item.izq)
+      });
+      for(let inex of filter){
+        regla.firstOnes = regla.firstOnes.concat(inex.firstOne);
+      }
+    }
+    //Going to find last ones from here
+    for(let regla of this.reglas){
+      regla.lastOnes = regla.lastOnes.concat(this.recursiveNextOnes(regla.izq));
+      regla.lastOnes = regla.lastOnes.filter(item => {
+        return item.indexOf('?') == -1;
+      });
+    }
+    for(let regla of this.reglas){
+      regla.makeUnique();
+    }
   }
 
   canAdd = () => {
@@ -42,48 +151,75 @@ export class ClosingComponent {
       return true;
   }
 
-  addRule = () => {
-    let n = new Rule();
+  addRule = (rule?: Rule) => {
+    let n = rule || new Rule();
     this.inputIzq = this.inputIzq.toUpperCase();
-    n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
-    n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
+    if(!rule){
+      n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
+      n.der = this.inputDer.replace(new RegExp(/ /, 'g'), "");
+    }
     this.inputDer = "";
     this.inputIzq = "";
-    this.reglas.push(n);
-    let band = false;
-    for (const nt of this.non_terminals) {
-      if (n.izq === nt) {
-        band = true;
+    document.getElementById('inputIzq').focus();
+    if(n.der.endsWith('#')){
+      alert("No es posible agregar una regla con final de cadena")
+    }
+    else{
+      if (this.reglas.length === 0 ){
+        this.reglas.push(new Rule(n.izq, n.izq + '#'))
       }
-    }
-    if (!band){
-      this.non_terminals.push(n.izq);
-      console.log('No terminal - ' + n.izq);
-    }
-    for (let c = 0 ; c < n.der.length ; c++) {
-      band = false;
-      if (n.der.charAt(c) === n.der.charAt(c).toLowerCase()) {
-        for (const t of this.terminals) {
-          if (n.der.charAt(c) === t) {
-            band = true;
-          }
+      this.reglas.push(n);
+      let band = false;
+      for (const nt of this.non_terminals) {
+        if (n.izq === nt) {
+          band = true;
         }
-        if (!band) {
-          this.terminals.push(n.der.charAt(c));
-          console.log('Terminal - ' + n.der.charAt(c));
-        }
-      }else {
-          for (const nt of this.non_terminals) {
-              if (n.der.charAt(c) === nt) {
-                  band = true;
-              }
+      }
+      if (!band){
+        this.non_terminals.push(n.izq);
+        console.log('No terminal - ' + n.izq);
+      }
+      for (let c = 0 ; c < n.der.length ; c++) {
+        band = false;
+        if (n.der.charAt(c) === n.der.charAt(c).toLowerCase()) {
+          for (const t of this.terminals) {
+            if (n.der.charAt(c) === t) {
+              band = true;
+            }
           }
           if (!band) {
-              this.non_terminals.push(n.der.charAt(c));
-              console.log('No terminal - ' + n.der.charAt(c));
+            this.terminals.push(n.der.charAt(c));
+            console.log('Terminal - ' + n.der.charAt(c));
           }
+        }else {
+            for (const nt of this.non_terminals) {
+                if (n.der.charAt(c) === nt) {
+                    band = true;
+                }
+            }
+            if (!band) {
+                this.non_terminals.push(n.der.charAt(c));
+                console.log('No terminal - ' + n.der.charAt(c));
+            }
+        }
       }
     }
+  }
+
+  createGrammar = () => {
+    this.completeGrammar.split('\n').forEach(rule => {
+      if(!rule.endsWith('#')){
+        const aux = new Rule(rule.split('->')[0].trim(), rule.split('->')[1].trim())
+        this.addRule(aux);
+      }
+    })
+  }
+
+  removeRule = (toRemove: Rule) => {
+    if(toRemove.der.includes('#'))
+      alert('No se puede borrar la regla primaria')
+    else
+      this.reglas.splice(this.reglas.findIndex(rule => rule.izq === toRemove.izq && rule.der === toRemove.der))
   }
 
   notInPrevious = (close: Closing, rule: Rule) => {
@@ -116,19 +252,27 @@ export class ClosingComponent {
     }
   }
 
+
   startClosings = () => {
-    let initial = this.reglas.find(item => {
-      return item.der.indexOf('#') != -1;
+    const sameGrammar = (this.usedGrammar.length == this.reglas.length) && this.usedGrammar.every((element, index) => {
+      return element === this.reglas[index]; 
     });
-    let newC = new Closing();
-    let newR = new Rule;
-    newR.izq = initial.izq;
-    newR.der = [initial.der.slice(0,0) + '.' + initial.der.slice(0)].toString();
-    newC.reglas.push(newR);
-    newC.index = 0;
-    this.generateRules(newC);
-    this.closings.push(newC);
-    this.makeClosings();
+    if(!sameGrammar){
+       this.closings = [];
+       this.usedGrammar = this.reglas.concat();
+      let initial = this.reglas.find(item => {
+        return item.der.indexOf('#') != -1;
+      });
+      let newC = new Closing();
+      let newR = new Rule;
+      newR.izq = initial.izq;
+      newR.der = [initial.der.slice(0,0) + '.' + initial.der.slice(0)].toString();
+      newC.reglas.push(newR);
+      newC.index = 0;
+      this.generateRules(newC);
+      this.closings.push(newC);
+      this.makeClosings();
+    }
   }
 
   checkCopy = (closing: Closing) => {
@@ -271,4 +415,13 @@ export class ClosingComponent {
     }
     return true;
   }
+
+  toggleTable = () => {
+    this.showTable = !this.showTable;
+  }
+
+  toggleGoTo = () => {
+    this.showGoTo = !this.showGoTo;
+  }
+
 }

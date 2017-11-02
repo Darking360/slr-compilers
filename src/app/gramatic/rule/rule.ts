@@ -9,12 +9,18 @@ export class Rule {
   dotApplied: boolean = false;
   isFinal: boolean = false;
 
-  constructor(izq = '', der = ''){
-    this.izq = izq;
-    this.der = der;
+
+  constructor(leftSide = '', rightSide = ''){
     this.firstOnes = [];
     this.lastOnes = [];
     this.firstOne = [];
+    this.izq = leftSide;
+    this.der = rightSide;
+  }
+
+  toString = () => {
+    const hashRule = this.der.endsWith('#') ? "'" : '';
+    return this.izq + hashRule + ' -> ' + this.der
   }
 
   searchEmpty = () => {

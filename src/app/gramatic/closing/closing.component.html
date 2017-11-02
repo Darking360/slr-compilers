@@ -1,12 +1,17 @@
 <div class="form-group col-xs-12">
   <label>Lado izquierdo</label>
-  <input type="text" [(ngModel)]="inputIzq">
+  <input id="inputIzq" type="text" [(ngModel)]="inputIzq">
   <label> -----> </label>
   <label>Lado derecho</label>
-  <input type="text" [(ngModel)]="inputDer">
+  <input type="text" (keyup.enter)="addRule()" [(ngModel)]="inputDer">
+</div>
+<div class="grammar-creation">
+  <textarea class="grammar-area" id="grammarArea" placeholder="Pega toda la gramatica para generarla en el boton" [(ngModel)]="completeGrammar"></textarea>
+  <button type="button" class="btn btn-success generate-grammar" (click)="createGrammar()">Generar gramatica</button>
 </div>
 <div class="col-xs-12 text-center">
   <button [disabled]="canAdd()" type="button" class="btn btn-success" (click)="addRule()">Crear regla</button>
+  <button [disabled]="this.reglas.length === 0" type="button" class="btn btn-primary" (click)="findFirstAndLastOnes()">Primeros + Siguientes</button>
   <button [disabled]="reviewRules()" type="button" class="btn btn-primary" (click)="startClosings()">IR_A</button>
   <button [disabled]="reviewClosings()" type="button" class="btn btn-primary" (click)="generateTable()">Tabla Reduccion / Desplazamiento</button>
 </div>
@@ -14,32 +19,41 @@
   <h2>Lado izquierdo: {{inputIzq}}</h2>
   <h2>Lado derecho: {{inputDer}}</h2>
 </div>
-<h2>Reglas de la gramatica</h2>
 <div *ngIf="reglas.length > 0" class="col-xs-12">
-  <div *ngFor="let regla of reglas ; let i=index" class="col-xs-12">
-    <h3 class="col-xs-1">{{ i }}.)</h3>
-    <h3 class="col-xs-1">{{ regla.izq }}</h3>
-    <h3 class="col-xs-1"> => </h3>
-    <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
+  <h2 >Reglas de la gramatica</h2>
+  <div *ngFor="let regla of reglas" class="col-xs-12">
+    <i (click)="removeRule(regla)" class=" glyphicon glyphicon-remove-circle"></i>
+    <h4 class="col-xs-1">{{ regla.izq }}<span *ngIf="regla.der.endsWith('#')">'</span></h4>
+    <h4 class="col-xs-1"> => </h4>
+    <h4 class="col-xs-2">  {{ "{"+regla.der+"}" }}</h4>
+    <h4 class="col-xs-1"> Primeros regla: </h4>
+    <h4 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOne.join(", ") }}</h4>
+    <h4 class="col-xs-1"> Primeros: </h4>
+    <h4 *ngIf="regla.firstOnes.length > 0" class="col-xs-2">{{ regla.firstOnes.join(", ") }}</h4>
+    <h4 class="col-xs-1"> Siguientes: </h4>
+    <h4 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h4>
   </div>
 </div>
-<h2>Expansión de IR_A</h2>
 <div *ngIf="closings.length > 0" class="col-xs-12">
-  <div *ngFor="let closing of closings" class="col-xs-12 {{closing.isCopy ? 'borderBonito' : 'borderFeo'}}">
-    <h3>Ir_a({{ closing.from }}, {{ closing.to }})</h3>
-    <div *ngFor="let regla of closing.reglas" class="col-xs-12">
-      <h3 class="col-xs-1">{{ regla.izq }}</h3>
-      <h3 class="col-xs-1"> => </h3>
-      <h3 class="col-xs-1">  {{ "{"+regla.der+"}" }}</h3>
+  <span class="go-to-title"><h2>Expansión de IR_A</h2></span>
+  <i (click)="toggleGoTo()" [ngClass]="showGoTo ? 'glyphicon-menu-up' : 'glyphicon-menu-down'" class="glyphicon show-go-to"></i> 
+  <div *ngIf="showGoTo" class="go-to-container">
+    <div *ngFor="let closing of closings" class="rectangle-container">
+      <div>Ir_a(I<sub>{{closing.from}}</sub>,{{closing.to}})</div>
+      <section [ngClass]="(closing.isACopy())?'goto-rectangle copy-state':'goto-rectangle'">
+        <div *ngFor="let regla of closing.reglas" class="state-text">
+          {{regla.toString()}}
+        </div>
+      </section>
+      <div><span *ngIf="closing.isACopy()">#</span>I<sub>{{closing.index}}</sub></div>
+      <div *ngIf="closing.isFinal" class="use-reduction">Tomada en cuenta para reducción</div>
     </div>
-    <h3 *ngIf="!closing.isCopy">I{{ closing.index }}</h3>
-    <h3 *ngIf="closing.isCopy">#I{{ closing.index }}</h3>
-    <h5 *ngIf="closing.isFinal">Tomada en cuenta para reducción</h5>
   </div>
 </div>
-<h2>Tabla Reduccion / Desplazamiento</h2>
 <div *ngIf="table.length > 0" class="col-xs-12">
-  <table class="table">
+  <span class="table-title"><h2>Tabla Reduccion / Desplazamiento</h2></span>
+  <i (click)="toggleTable()" [ngClass]="showTable ? 'glyphicon-menu-up' : 'glyphicon-menu-down'" class="glyphicon  show-table"></i> 
+  <table *ngIf="showTable" class="table table-hover table-bordered">
     <thead>
       <tr>
         <th>Estado</th>
@@ -49,8 +63,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let row of table ; let i=index">
-        <td>{{ i }}</td>
-        <td *ngFor="let element of row">{{ element }}</td>
+        <td class="state">{{ i }}</td>
+        <td class="element" *ngFor="let element of row">{{ element }}</td>
       </tr>
     </tbody>
   </table>

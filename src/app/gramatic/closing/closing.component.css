@@ -1,9 +1,85 @@
-.borderFeo{
-  margin: 1em;
-  border: solid;
+.goto-rectangle {
+	border: 1px solid black;
+	min-height: 130px;
+	width: 100px;
+	padding: 10px;
+	display: inline-block;
+	margin: 0 1em;
+	text-align: left;
 }
 
-.borderBonito{
-  margin: 1em;
-  border: dotted solid;
+.rectangle-container {
+	display: inline-block;
+	vertical-align: top;
+	margin: 15px 0;
+}
+
+.state-text {
+}
+
+.copy-state {
+	border: 2px solid blue;
+}
+
+.use-reduction {
+	max-width: 15ch;
+    text-align: center;
+}
+
+.grammar-area {
+	resize: none;
+	width: 30ch;
+    line-height: 1;
+    height: 10em;
+}
+
+.generate-grammar {
+	vertical-align: top;
+	margin-top: 3em;
+}
+
+.grammar-creation {
+	margin: 10px 0;
+}
+
+.table th{
+	text-align: center;
+}
+
+.table .state {
+	width: 5ch;
+}
+
+.table {
+	left: 0;
+	margin: auto;
+	right: 0;
+	width: 80%;
+}
+
+.table .element {
+	width: 10ch;
+}
+
+.glyphicon-remove-circle:hover {
+	font-size: 35px;
+}
+
+.glyphicon-remove-circle {
+	color: red;
+	font-size: 30px;
+	cursor: pointer;
+	margin-top: 15px;
+    left: 0;
+    position: absolute;
+}
+
+.show-table, .show-go-to {
+	font-size: 18pt;
+	margin: 5px;
+	cursor: pointer;
+}
+
+.table-title, .go-to-title {
+	display: inline-block;
 }

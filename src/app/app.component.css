@@ -1,0 +1,14 @@
+.group-show {
+	margin: 10px;
+	cursor: pointer;
+	font-size: 18px;
+}
+
+.group-show:hover + .group{
+	display: block;
+}
+
+.group {
+	display: none;
+	margin: 20px;
+}

@@ -8,4 +8,10 @@ export class Closing {
   to: string;
   isFinal: boolean = false;
 
+  isACopy = (): boolean => {
+  	return this.isCopy;
+  }
+
 }
+
+
