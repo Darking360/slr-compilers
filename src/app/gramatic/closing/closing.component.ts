@@ -29,27 +29,36 @@ export class ClosingComponent {
 
   firstNested = (rule: Rule, character: string, chain: string, index: number) => {
     for(let regla of this.reglas){
-      if(new RegExp(character).test(regla.izq) && !regla.der.endsWith('#') && regla.der.indexOf(regla.izq) == -1){
+      if(rule.firstExpanded == false && regla.izq != rule.izq && new RegExp(character).test(regla.izq) && !regla.der.endsWith('#') && regla.der.indexOf(regla.izq) == -1){
         if(regla.searchEmpty()){
           rule.firstOne = rule.firstOne.concat(regla.firstOnes);
           rule.firstOne = rule.firstOne.filter(item => {
             return item !== '?';
           });
           rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
-          if(index + 1 !== chain.length){
+          if(typeof chain[index+1] != 'undefined'){
             rule.firstOnes = rule.firstOnes.filter(item => {
-              return item !== '?';
+              return item !== '?'; 
             });
           }
-          if(index <= chain.length)
+          if(typeof chain[index+1] != 'undefined' && new RegExp('[A-Z]').test(chain[index+1]) && chain[index+1] != rule.izq)
             this.firstNested(rule,chain[index+1], chain, index+1);
-          else
+          else if(typeof chain[index+1] != 'undefined' && !new RegExp('[A-Z]').test(chain[index+1])){
+            rule.firstOne.push(chain[index+1]);
+            rule.firstOnes.push(chain[index+1]);
+            rule.firstExpanded = true; 
+            debugger;
+            break;
+          }else
             break;
         }else{
           rule.firstOne = rule.firstOne.concat(regla.firstOnes);
           rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
         }
         break;
+      }else if(regla.izq == rule.izq){
+        rule.firstOne = rule.firstOne.concat(regla.firstOnes);
+        rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
       }
     }
   }
