@@ -210,7 +210,7 @@ export class ClosingComponent {
   createGrammar = () => {
     this.completeGrammar.split('\n').forEach(rule => {
       if(!rule.endsWith('#')){
-        const aux = new Rule(rule.split('->')[0].trim(), rule.split('->')[1].trim())
+        const aux = new Rule(rule.split('->')[0].trim().replace(/ +/g, ""), rule.split('->')[1].trim().replace(/ +/g, ""))
         this.addRule(aux);
       }
     })
