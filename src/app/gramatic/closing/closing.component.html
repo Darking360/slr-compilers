@@ -21,8 +21,9 @@
 </div>
 <div *ngIf="reglas.length > 0" class="col-xs-12">
   <h2 >Reglas de la gramatica</h2>
-  <div *ngFor="let regla of reglas" class="col-xs-12">
+  <div *ngFor="let regla of reglas ; let i=index" class="col-xs-12">
     <i (click)="removeRule(regla)" class=" glyphicon glyphicon-remove-circle"></i>
+    <h4 class="col-xs-1">{{ i }}.)</h4>
     <h4 class="col-xs-1">{{ regla.izq }}<span *ngIf="regla.der.endsWith('#')">'</span></h4>
     <h4 class="col-xs-1"> => </h4>
     <h4 class="col-xs-2">  {{ "{"+regla.der+"}" }}</h4>
