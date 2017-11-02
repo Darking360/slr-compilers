@@ -29,7 +29,7 @@ export class ClosingComponent {
 
   firstNested = (rule: Rule, character: string, chain: string, index: number) => {
     for(let regla of this.reglas){
-      if(new RegExp(character).test(regla.izq) && !regla.der.endsWith('#')) {
+      if(new RegExp(character).test(regla.izq) && !regla.der.endsWith('#')){
         if(regla.searchEmpty()){
           rule.firstOne = rule.firstOne.concat(regla.firstOnes);
           rule.firstOne = rule.firstOne.filter(item => {
@@ -166,7 +166,8 @@ export class ClosingComponent {
     }
     else{
       if (this.reglas.length === 0 ){
-        this.reglas.push(new Rule(n.izq, n.izq + '#'))
+        this.reglas.push(new Rule(n.izq, n.izq + '#'));
+        this.terminals.push('#');
       }
       this.reglas.push(n);
       let band = false;
@@ -255,7 +256,7 @@ export class ClosingComponent {
 
   startClosings = () => {
     const sameGrammar = (this.usedGrammar.length == this.reglas.length) && this.usedGrammar.every((element, index) => {
-      return element === this.reglas[index]; 
+      return element === this.reglas[index];
     });
     if(!sameGrammar){
        this.closings = [];
@@ -414,7 +415,7 @@ export class ClosingComponent {
 
       for (let t = 0 ; t < this.terminals.length ; t++) {
           if ('#' === this.terminals[t]) {
-              this.table[1][t] = 'OK';
+              this.table[1][t + this.non_terminals.length] = 'OK';
           }
       }
   }
