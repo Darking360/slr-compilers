@@ -29,7 +29,7 @@ export class ClosingComponent {
 
   firstNested = (rule: Rule, character: string, chain: string, index: number) => {
     for(let regla of this.reglas){
-      if(new RegExp(character).test(regla.izq)){
+      if(new RegExp(character).test(regla.izq) && !regla.der.endsWith('#')) {
         if(regla.searchEmpty()){
           rule.firstOne = rule.firstOne.concat(regla.firstOnes);
           rule.firstOne = rule.firstOne.filter(item => {
