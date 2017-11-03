@@ -505,6 +505,10 @@ export class ClosingComponent {
     return word.join().replace(/,/g,'')
   }
 
+  getStack = (stack) => {
+    return stack.join().replace(/,/g,'  ')
+  }
+
   getReduction = (reduction: string,stack) => {
     if(!reduction)
       return 'ERROR'

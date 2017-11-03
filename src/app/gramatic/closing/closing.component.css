@@ -85,5 +85,9 @@
 }
 
 .word-recognize-container {
-	margin: 10px;
+	margin: 30px 0;
+}
+
+.word-input {
+	margin: 10px 0;	
 }
