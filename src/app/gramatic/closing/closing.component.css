@@ -83,3 +83,7 @@
 .table-title, .go-to-title {
 	display: inline-block;
 }
+
+.word-recognize-container {
+	margin: 10px;
+}

@@ -74,8 +74,25 @@
 <div class="word-recognize-container">
   
   <div class="word-input">
-    <input type="text" [(ngModel)]="wordToRecognize">
+    <input type="text" [(ngModel)]="wordToRecognize" (keyup.enter)="testWord()">
     <button type="button" class="btn btn-success" (click)="testWord()">Probar palabra</button>
+    <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Pila</th>
+        <th>Palabra</th>
+        <th>Accion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of actions ; let i=index">
+        <td class="state">{{ getWord(stack[i]) }}</td>
+        <td class="state">{{ getWord(word[i]) }}</td>
+        <td class="state">{{ getReduction(actions[i], stack[i]) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
   </div>
 
 </div>

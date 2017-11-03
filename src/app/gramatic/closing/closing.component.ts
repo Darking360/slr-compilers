@@ -24,6 +24,10 @@ export class ClosingComponent {
   inputDer: string = "";
   completeGrammar: string = "";
   wordToRecognize: string = "";
+  stack = [];
+  actions = [];
+  word = [];
+
 
 
   constructor(){
@@ -210,6 +214,7 @@ export class ClosingComponent {
   }
 
   createGrammar = () => {
+    this.reglas = []
     this.completeGrammar.split('\n').forEach(rule => {
       if(!rule.endsWith('#')){
         const aux = new Rule(rule.split('->')[0].trim().replace(/ +/g, ""), rule.split('->')[1].trim().replace(/ +/g, ""))
@@ -469,12 +474,11 @@ export class ClosingComponent {
     let step = 0;
 
     while(!end){
-
+      this.stack.push(stack.concat());
+      this.word.push(word.concat());
       action.push(this.table[stack.slice(-1)[0]][letters.indexOf(word[0])])
-      console.log('action', action)
       if(typeof action.slice(-1)[0] !== 'string'){
         end=true;
-        alert('error')
       }
       else if(action.slice(-1)[0].includes('D') && !action.slice(-1)[0].includes('R')){
         this.displacement(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word);
@@ -483,17 +487,37 @@ export class ClosingComponent {
         this.reduction(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word, letters);
       }
       step++;
+      
+
       if(!stack.slice(-1)[0]){
         end = true;
-        alert('error');
       }
       else if(action.slice(-1)[0] === 'OK'){
         end = true;
-        alert('palabra aceptada')
       }
     }
 
+    this.actions = action.concat();
+
   }
 
+  getWord = (word) => {
+    return word.join().replace(/,/g,'')
+  }
+
+  getReduction = (reduction: string,stack) => {
+    if(!reduction)
+      return 'ERROR'
+    else if(reduction.includes('OK'))
+      return 'OK'
+    else if(typeof reduction !== 'string')
+      return 'ERROR'
+    const regla = this.reglas[reduction.match(/[0-9]+/g)[0]];
+    //return reduction + ','+regla.toString()+','+'Ir_a('+ stack.slice(-2)[0]  +','+regla.getLeftSide()+')'
+    if(reduction.includes('R'))
+      return `${reduction}, ${regla.toString()}, Ir_a(${stack.slice(-2)[0]},${regla.getLeftSide()})`
+    else
+      return reduction
+  }
 
 }
