@@ -23,6 +23,8 @@ export class ClosingComponent {
   inputIzq: string = "";
   inputDer: string = "";
   completeGrammar: string = "";
+  wordToRecognize: string = "";
+
 
   constructor(){
   }
@@ -425,6 +427,7 @@ export class ClosingComponent {
               this.table[1][t + this.non_terminals.length] = 'OK';
           }
       }
+      console.log(this.reglas)
       console.log(this.table)
   }
 
@@ -442,5 +445,55 @@ export class ClosingComponent {
   toggleGoTo = () => {
     this.showGoTo = !this.showGoTo;
   }
+
+  displacement = (stack: number[], number: number, word: string[]) => {
+    stack.push(number);
+    word.shift();
+  }
+
+  reduction = (stack: number[], number: number, word: string[], letters) => {
+    for(let i=0;i<Array.from(this.reglas[number].getRigthSide()).length;i++)
+      stack.pop()
+
+    stack.push(parseInt(this.table[stack.slice(-1)[0]][letters.indexOf(this.reglas[number].getLeftSide())]))
+
+  }
+
+  testWord = () => {
+    let stack = [0];
+    let word = Array.from(this.wordToRecognize).concat('#');
+    let action: string[] = [];
+    let end = false;
+    const letters = this.non_terminals.concat(this.terminals)
+
+    let step = 0;
+
+    while(!end){
+
+      action.push(this.table[stack.slice(-1)[0]][letters.indexOf(word[0])])
+      console.log('action', action)
+      if(typeof action.slice(-1)[0] !== 'string'){
+        end=true;
+        alert('error')
+      }
+      else if(action.slice(-1)[0].includes('D') && !action.slice(-1)[0].includes('R')){
+        this.displacement(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word);
+      }
+      else if(action.slice(-1)[0].includes('R') && !action.slice(-1)[0].includes('D')){
+        this.reduction(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word, letters);
+      }
+      step++;
+      if(!stack.slice(-1)[0]){
+        end = true;
+        alert('error');
+      }
+      else if(action.slice(-1)[0] === 'OK'){
+        end = true;
+        alert('palabra aceptada')
+      }
+    }
+
+  }
+
 
 }
