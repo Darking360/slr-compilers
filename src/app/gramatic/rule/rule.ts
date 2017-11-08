@@ -9,6 +9,7 @@ export class Rule {
   dotApplied: boolean = false;
   isFinal: boolean = false;
   firstExpanded: boolean = false;
+  nextOneExpanded: boolean = false;
 
 
   constructor(leftSide = '', rightSide = ''){
