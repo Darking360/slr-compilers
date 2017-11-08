@@ -43,7 +43,7 @@
       <div>Ir_a(I<sub>{{closing.from}}</sub>,{{closing.to}})</div>
       <section [ngClass]="(closing.isACopy())?'goto-rectangle copy-state':'goto-rectangle'">
         <div *ngFor="let regla of closing.reglas" class="state-text">
-          <span *ngIf="closing.index == 1 || checkPrintRule(closing, regla)">{{ regla.toString() }}</span>
+          <span *ngIf="closing.index == 1 || closing.index == 0 || checkPrintRule(closing, regla)">{{ regla.toString() }}</span>
         </div>
       </section>
       <div><span *ngIf="closing.isACopy()">#</span>I<sub>{{closing.index}}</sub></div>
