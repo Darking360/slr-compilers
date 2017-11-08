@@ -153,6 +153,14 @@ export class ClosingComponent {
     for(let regla of this.reglas){
       regla.makeUnique();
     }
+    for(let regla of this.reglas){
+      if(regla.firstOne.length == 0){
+        let busq = this.reglas.find(item => {
+          return item.izq === regla.der[0];
+        });
+        regla.firstOne = busq.firstOnes;
+      }
+    }
     //Going to find last ones from here
     for(let regla of this.reglas){
     console.log("SE HACE");
