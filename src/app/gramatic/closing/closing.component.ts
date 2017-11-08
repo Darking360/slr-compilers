@@ -451,7 +451,7 @@ export class ClosingComponent {
                 for (const siguiente of rule.lastOnes){
                   if (siguiente === this.terminals[t]) {
                     if (typeof this.table[closing.index][t + this.non_terminals.length] != 'undefined') {
-                      this.table[closing.index][t + this.non_terminals.length] += reduccion;
+                      this.table[closing.index][t + this.non_terminals.length] += " " + reduccion;
                     }else{
                       this.table[closing.index][t + this.non_terminals.length] = reduccion;
                     }

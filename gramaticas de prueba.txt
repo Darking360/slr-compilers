@@ -23,3 +23,9 @@ F->f
 E->i
 E->i(E)
 E->E+id
+
+S->L,R
+S->R
+L->*R
+L->i
+R->L
