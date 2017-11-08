@@ -30,9 +30,9 @@
     <h4 class="col-xs-1"> Primeros regla: </h4>
     <h4 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOne.join(", ") }}</h4>
     <h4 class="col-xs-1"> Primeros: </h4>
-    <h4 *ngIf="regla.firstOnes.length > 0" class="col-xs-2">{{ regla.firstOnes.join(", ") }}</h4>
+    <h4 *ngIf="regla.firstOnes.length > 0" class="col-xs-1">{{ regla.firstOnes.join(", ") }}</h4>
     <h4 class="col-xs-1"> Siguientes: </h4>
-    <h4 *ngIf="regla.lastOnes.length > 0" class="col-xs-2">{{ regla.lastOnes.join(", ") }}</h4>
+    <h4 *ngIf="regla.lastOnes.length > 0" class="col-xs-1">{{ regla.lastOnes.join(", ") }}</h4>
   </div>
 </div>
 <div *ngIf="closings.length > 0" class="col-xs-12">
