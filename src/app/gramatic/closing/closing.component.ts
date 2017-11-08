@@ -46,11 +46,11 @@ export class ClosingComponent {
             rule.firstOne = rule.firstOne.filter(item => {
               return item !== '?';
             });
-          }          
+          }
           rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
           if(typeof chain[index+1] != 'undefined'){
             rule.firstOnes = rule.firstOnes.filter(item => {
-              return item !== '?'; 
+              return item !== '?';
             });
           }
           if(typeof chain[index+1] != 'undefined' && new RegExp('[A-Z]').test(chain[index+1]) && chain[index+1] != rule.izq)
@@ -59,9 +59,9 @@ export class ClosingComponent {
             rule.firstOne.push(chain[index+1]);
             rule.firstOnes.push(chain[index+1]);
             rule.firstOnes = rule.firstOnes.filter(item => {
-              return item !== '?'; 
+              return item !== '?';
             });
-            rule.firstExpanded = true; 
+            rule.firstExpanded = true;
             debugger;
             break;
           }else
@@ -506,14 +506,20 @@ export class ClosingComponent {
       if(typeof action.slice(-1)[0] !== 'string'){
         end=true;
       }
+      else if(action.slice(-1)[0].includes('D') && action.slice(-1)[0].includes('R')){
+          alert("Existe un conflicto desplazamieno reduccion. Se elegira el desplazamiento");
+          this.displacement(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word);
+      }
+
       else if(action.slice(-1)[0].includes('D') && !action.slice(-1)[0].includes('R')){
+          console.log("action", action)
         this.displacement(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word);
       }
       else if(action.slice(-1)[0].includes('R') && !action.slice(-1)[0].includes('D')){
         this.reduction(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word, letters);
       }
       step++;
-      
+
 
       if(!stack.slice(-1)[0]){
         end = true;
