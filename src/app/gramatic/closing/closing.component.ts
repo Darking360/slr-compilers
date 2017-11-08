@@ -85,7 +85,7 @@ export class ClosingComponent {
     return false;
   }
 
-  recursiveNextOnes = (rule: string) => {
+  recursiveNextOnes = (rule: string, comeFrom: string) => {
     let nextOnes = [];
     let find = this.reglas.filter(item => {
       return item.der.indexOf(rule) != -1 ;
@@ -101,7 +101,7 @@ export class ClosingComponent {
             return item !== '?';
           });
           if(busq.izq != rule)
-            nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
+            nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq, null));
         }else{
           let hall = this.reglas.find(item => {
             return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
@@ -110,8 +110,10 @@ export class ClosingComponent {
         }
       }else if(typeof busq.der[busq.der.indexOf(rule)+1] != 'undefined' && !new RegExp('[A-Z]').test(busq.der[busq.der.indexOf(rule)+1])){
         nextOnes.push(busq.der[busq.der.indexOf(rule)+1]);
-      }else if(busq.der.indexOf(rule) != -1 && (busq.der.indexOf(rule) + 1) == busq.der.length && busq.der[busq.der.indexOf(rule)] != busq.izq){
-        nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
+      }else if(busq.der.indexOf(rule) != -1 && (busq.der.indexOf(rule) + 1) == busq.der.length && busq.der[busq.der.indexOf(rule)] != busq.izq && busq.der !== comeFrom ){
+        nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq, busq.izq));
+      }else if(busq.der == comeFrom){
+        nextOnes = nextOnes.concat(busq.lastOnes);
       }
     }
     return nextOnes;
@@ -151,10 +153,18 @@ export class ClosingComponent {
     for(let regla of this.reglas){
       regla.makeUnique();
     }
+    for(let regla of this.reglas){
+      if(regla.firstOne.length == 0){
+        let busq = this.reglas.find(item => {
+          return item.izq === regla.der[0];
+        });
+        regla.firstOne = busq.firstOnes;
+      }
+    }
     //Going to find last ones from here
     for(let regla of this.reglas){
     console.log("SE HACE");
-      regla.lastOnes = regla.lastOnes.concat(this.recursiveNextOnes(regla.izq));
+      regla.lastOnes = regla.lastOnes.concat(this.recursiveNextOnes(regla.izq, regla.izq));
       regla.lastOnes = regla.lastOnes.filter(item => {
         return item.indexOf('?') == -1;
       });
