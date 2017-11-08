@@ -440,7 +440,7 @@ export class ClosingComponent {
               for (let t = 0 ; t < this.terminals.length ; t++) {
                 for (const siguiente of rule.lastOnes){
                   if (siguiente === this.terminals[t]) {
-                    if (typeof this.table[closing.index][t + this.non_terminals.length] !== 'undefined') {
+                    if (typeof this.table[closing.index][t + this.non_terminals.length] != 'undefined') {
                       this.table[closing.index][t + this.non_terminals.length] += reduccion;
                     }else{
                       this.table[closing.index][t + this.non_terminals.length] = reduccion;
@@ -506,11 +506,18 @@ export class ClosingComponent {
       if(typeof action.slice(-1)[0] !== 'string'){
         end=true;
       }
+     else if(Array.from(action.slice(-1)[0]).filter((obj)=>{
+         if (obj === "R") return obj
+     }).length>1){
+         alert("Conflicto Reduccion-Reduccion. ERROR.")
+         action.push("ERROR");
+         end=true;
+         break;
+     }
       else if(action.slice(-1)[0].includes('D') && action.slice(-1)[0].includes('R')){
           alert("Existe un conflicto desplazamieno reduccion. Se elegira el desplazamiento");
           this.displacement(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word);
       }
-
       else if(action.slice(-1)[0].includes('D') && !action.slice(-1)[0].includes('R')){
           console.log("action", action)
         this.displacement(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word);
