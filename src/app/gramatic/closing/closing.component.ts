@@ -164,6 +164,10 @@ export class ClosingComponent {
     }
   }
 
+  checkPrintRule = (closing: Closing, regla: Rule) => {
+    return closing.index != 1 && !(regla.der.indexOf('#') != -1);
+  }
+
   canAdd = () => {
     let n = new Rule();
     n.izq = this.inputIzq.replace(new RegExp(/ /, 'g'), "");
