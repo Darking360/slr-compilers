@@ -147,6 +147,7 @@ export class ClosingComponent {
     }
     //Going to find last ones from here
     for(let regla of this.reglas){
+    console.log("SE HACE");
       regla.lastOnes = regla.lastOnes.concat(this.recursiveNextOnes(regla.izq));
       regla.lastOnes = regla.lastOnes.filter(item => {
         return item.indexOf('?') == -1;
