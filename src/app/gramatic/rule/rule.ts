@@ -8,6 +8,7 @@ export class Rule {
   gramaticExpanded: boolean = false;
   dotApplied: boolean = false;
   isFinal: boolean = false;
+  firstExpanded: boolean = false;
 
 
   constructor(leftSide = '', rightSide = ''){
@@ -32,6 +33,9 @@ export class Rule {
   }
 
   makeUnique = () => {
+    this.firstOne = this.firstOne.filter(function(item, pos, self) {
+      return self.indexOf(item) == pos;
+    });
     this.firstOnes = this.firstOnes.filter(function(item, pos, self) {
       return self.indexOf(item) == pos;
     });

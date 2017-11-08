@@ -35,34 +35,51 @@ export class ClosingComponent {
 
   firstNested = (rule: Rule, character: string, chain: string, index: number) => {
     for(let regla of this.reglas){
-      if(new RegExp(character).test(regla.izq) && !regla.der.endsWith('#') && regla.der.indexOf(regla.izq) == -1){
+      if(rule.firstExpanded == false && regla.izq != rule.izq && new RegExp(character).test(regla.izq) && !regla.der.endsWith('#') && regla.der.indexOf(regla.izq) == -1){
+        if(regla.firstOne.length == 0 || regla.firstOnes.length == 0){
+          this.firstNested(regla,regla.der[0], regla.der, 0);
+          regla.firstExpanded = true;
+        }
         if(regla.searchEmpty()){
           rule.firstOne = rule.firstOne.concat(regla.firstOnes);
-          rule.firstOne = rule.firstOne.filter(item => {
-            return item !== '?';
-          });
-          rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
-          if(index + 1 !== chain.length){
-            rule.firstOnes = rule.firstOnes.filter(item => {
+          if(typeof chain[index+1] != 'undefined'){
+            rule.firstOne = rule.firstOne.filter(item => {
               return item !== '?';
             });
+          }          
+          rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
+          if(typeof chain[index+1] != 'undefined'){
+            rule.firstOnes = rule.firstOnes.filter(item => {
+              return item !== '?'; 
+            });
           }
-          if(index <= chain.length)
+          if(typeof chain[index+1] != 'undefined' && new RegExp('[A-Z]').test(chain[index+1]) && chain[index+1] != rule.izq)
             this.firstNested(rule,chain[index+1], chain, index+1);
-          else
+          else if(typeof chain[index+1] != 'undefined' && !new RegExp('[A-Z]').test(chain[index+1])){
+            rule.firstOne.push(chain[index+1]);
+            rule.firstOnes.push(chain[index+1]);
+            rule.firstOnes = rule.firstOnes.filter(item => {
+              return item !== '?'; 
+            });
+            rule.firstExpanded = true; 
+            debugger;
+            break;
+          }else
             break;
         }else{
           rule.firstOne = rule.firstOne.concat(regla.firstOnes);
           rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
         }
         break;
+      }else if(regla.izq == rule.izq){
+        rule.firstOnes = rule.firstOnes.concat(regla.firstOnes);
       }
     }
   }
 
   checkLeftFirstOnes = () => {
     for(let regla of this.reglas){
-      if(regla.firstOne.length == 0)
+      if(regla.firstOnes.length == 0)
         return true;
     }
     return false;
@@ -83,7 +100,8 @@ export class ClosingComponent {
           nextOnes = nextOnes.filter(item => {
             return item !== '?';
           });
-           nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
+          if(busq.izq != rule)
+            nextOnes = nextOnes.concat(this.recursiveNextOnes(busq.izq));
         }else{
           let hall = this.reglas.find(item => {
             return new RegExp(busq.der[busq.der.indexOf(rule)+1]).test(item.izq);
@@ -130,8 +148,12 @@ export class ClosingComponent {
         regla.firstOnes = regla.firstOnes.concat(inex.firstOne);
       }
     }
+    for(let regla of this.reglas){
+      regla.makeUnique();
+    }
     //Going to find last ones from here
     for(let regla of this.reglas){
+    console.log("SE HACE");
       regla.lastOnes = regla.lastOnes.concat(this.recursiveNextOnes(regla.izq));
       regla.lastOnes = regla.lastOnes.filter(item => {
         return item.indexOf('?') == -1;
