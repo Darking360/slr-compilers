@@ -37,7 +37,7 @@
 </div>
 <div *ngIf="closings.length > 0" class="col-xs-12">
   <span class="go-to-title"><h2>Expansión de IR_A</h2></span>
-  <i (click)="toggleGoTo()" [ngClass]="showGoTo ? 'glyphicon-menu-up' : 'glyphicon-menu-down'" class="glyphicon show-go-to"></i> 
+  <i (click)="toggleGoTo()" [ngClass]="showGoTo ? 'glyphicon-menu-up' : 'glyphicon-menu-down'" class="glyphicon show-go-to"></i>
   <div *ngIf="showGoTo" class="go-to-container">
     <div *ngFor="let closing of closings" class="rectangle-container">
       <div>Ir_a(I<sub>{{closing.from}}</sub>,{{closing.to}})</div>
@@ -53,7 +53,7 @@
 </div>
 <div *ngIf="table.length > 0" class="col-xs-12">
   <span class="table-title"><h2>Tabla Reduccion / Desplazamiento</h2></span>
-  <i (click)="toggleTable()" [ngClass]="showTable ? 'glyphicon-menu-up' : 'glyphicon-menu-down'" class="glyphicon  show-table"></i> 
+  <i (click)="toggleTable()" [ngClass]="showTable ? 'glyphicon-menu-up' : 'glyphicon-menu-down'" class="glyphicon  show-table"></i>
   <table *ngIf="showTable" class="table table-hover table-bordered">
     <thead>
       <tr>
@@ -72,9 +72,9 @@
 </div>
 
 <div class="word-recognize-container col-xs-12">
-  
+
   <div class="word-input">
-    <input type="text" [(ngModel)]="wordToRecognize" (keyup.enter)="table.length !== 0 && wordToRecognize.length !== 0 ? testWord() : null">
+    <input [disabled]="!permitirPalabra" type="text" [(ngModel)]="wordToRecognize" (keyup.enter)="table.length !== 0 && wordToRecognize.length !== 0 ? testWord() : null">
     <button [disabled]="table.length === 0 || wordToRecognize.length === 0" type="button" class="btn btn-success" (click)="testWord()">Probar palabra</button>
   </div>
     <table *ngIf="table.length !== 0 && wordToRecognize.length !== 0 && actions.length > 0" class="table table-hover table-bordered">
@@ -94,6 +94,6 @@
     </tbody>
   </table>
 
-  
+
 
 </div>

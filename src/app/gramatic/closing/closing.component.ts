@@ -9,6 +9,7 @@ import {forEach} from "@angular/router/src/utils/collection";
   styleUrls: ['./closing.component.css']
 })
 export class ClosingComponent {
+permitirPalabra: boolean = true;
   closings: Closing[] = [];
   reglas: Rule[] = [];
   terminals: string[] = [];
@@ -451,7 +452,10 @@ export class ClosingComponent {
                 for (const siguiente of rule.lastOnes){
                   if (siguiente === this.terminals[t]) {
                     if (typeof this.table[closing.index][t + this.non_terminals.length] != 'undefined') {
+                    alert("Hay un conflicto ");
+                    this.permitirPalabra = false;
                       this.table[closing.index][t + this.non_terminals.length] += " " + reduccion;
+
                     }else{
                       this.table[closing.index][t + this.non_terminals.length] = reduccion;
                     }
@@ -506,13 +510,29 @@ export class ClosingComponent {
     let action: string[] = [];
     let end = false;
     const letters = this.non_terminals.concat(this.terminals)
-
+    this.stack = []
+    this.word = []
     let step = 0;
+    let conflict = false;
+
+    for(let i=0;i<this.table[0].length;i++){
+        for (let j=0;j<this.table[0][0].length;j++){
+            if(Array.from(this.table[i][j]).filter((obj)=>{
+                if (obj === "R") return obj
+            }).length>1){
+                alert("Conflicto Reduccion-Reduccion. ERROR.")
+                action.push("ERROR");
+                end=true
+            }
+        }
+    }
+
+
 
     while(!end){
       this.stack.push(stack.concat());
       this.word.push(word.concat());
-      action.push(this.table[stack.slice(-1)[0]][letters.indexOf(word[0])])
+        action.push(this.table[stack.slice(-1)[0]][letters.indexOf(word[0])])
       if(typeof action.slice(-1)[0] !== 'string'){
         end=true;
       }
@@ -521,12 +541,16 @@ export class ClosingComponent {
      }).length>1){
          alert("Conflicto Reduccion-Reduccion. ERROR.")
          action.push("ERROR");
-         end=true;
-         break;
+         end=true
      }
       else if(action.slice(-1)[0].includes('D') && action.slice(-1)[0].includes('R')){
-          alert("Existe un conflicto desplazamieno reduccion. Se elegira el desplazamiento");
-          this.displacement(stack,parseInt(action.slice(-1)[0].match(/[0-9]+/g)[0]), word);
+          alert("Existe un conflicto desplazamieno reduccion.");
+          //console.log("AAA",(action.slice(-1)[0].split(" ")[0]))
+          end = true;
+          conflict = true;
+          return;
+        //  this.displacement(stack,parseInt(action.slice(-1)[0].split(" ")[0].match(/[0-9]+/g)[0]), word);
+         // console.log("STACK", stack)
       }
       else if(action.slice(-1)[0].includes('D') && !action.slice(-1)[0].includes('R')){
           console.log("action", action)
